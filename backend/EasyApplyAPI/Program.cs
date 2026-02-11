@@ -1,8 +1,21 @@
+using EasyApplyAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+#region DATABASE_SETUP
 
-// Swagger
+var password = Environment.GetEnvironmentVariable("EasyApplyDB_PASSWORD");
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    .Replace("PLACEHOLDER", password);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+#endregion
+
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -11,15 +24,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Easy Apply API");
-        c.RoutePrefix = string.Empty;
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
 app.MapControllers();
-
 app.Run();
