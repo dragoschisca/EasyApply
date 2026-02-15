@@ -1,0 +1,44 @@
+# ==============================
+# Node / Angular (frontend)
+# ==============================
+node_modules/
+dist/
+*.log
+.angular/
+
+# ==============================
+# .NET / C# (backend)
+# ==============================
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DS_Store
+
+# ==============================
+# Rider / IDE
+# ==============================
+.idea/
+.vscode/
+*.iml
+
+# ==============================
+# Environment / config
+# ==============================
+.env
+*.local
+*.cache
+*.backup
+
+# ==============================
+# Build outputs
+# ==============================
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.nuget
+*.nupkg
+*.swp
