@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EasyApplyAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d45d766f11f99e861f0d811fc51cf02f3dff85c9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c2ace560559eaea9f7bd3c0b448ce61b40d267fd")]
 [assembly: System.Reflection.AssemblyProductAttribute("EasyApplyAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EasyApplyAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

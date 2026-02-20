@@ -16,11 +16,4 @@
       <ProjectReference Include="..\EasyApply.Infrastructure\EasyApply.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="DTOs\Candidate\" />
-      <Folder Include="DTOs\Company\" />
-      <Folder Include="DTOs\CV\" />
-      <Folder Include="DTOs\Job\" />
-    </ItemGroup>
-
 </Project>
