@@ -1,1 +1,13 @@
+# Build artifacts
+/bin/
+/obj/
+
+# Rider & IDE files
+/.idea/
+/*.suo
+/*.user
+/*.userosscache
+/*.sln.docstates
+
+# macOS files
 .DS_Store
