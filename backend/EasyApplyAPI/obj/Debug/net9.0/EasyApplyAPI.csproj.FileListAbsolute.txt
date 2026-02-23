@@ -1,0 +1,87 @@
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/appsettings.Development.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/appsettings.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/EasyApplyAPI.staticwebassets.endpoints.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/EasyApplyAPI
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/EasyApplyAPI.deps.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/EasyApplyAPI.runtimeconfig.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/EasyApplyAPI.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/EasyApplyAPI.pdb
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/Microsoft.AspNetCore.OpenApi.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/Microsoft.OpenApi.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.csproj.AssemblyReference.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/rpswa.dswa.cache.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.AssemblyInfoInputs.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.AssemblyInfo.cs
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.csproj.CoreCompileInputs.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.MvcApplicationPartsAssemblyInfo.cs
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.MvcApplicationPartsAssemblyInfo.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/rjimswa.dswa.cache.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/rjsmrazor.dswa.cache.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/rjsmcshtml.dswa.cache.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/scopedcss/bundle/EasyApplyAPI.styles.css
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/staticwebassets.build.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/staticwebassets.build.json.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/staticwebassets.development.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/staticwebassets.build.endpoints.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyAppl.25BDF81B.Up2Date
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/refint/EasyApplyAPI.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.pdb
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/EasyApplyAPI.genruntimeconfig.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApplyAPI/obj/Debug/net9.0/ref/EasyApplyAPI.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\appsettings.Development.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\appsettings.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\EasyApplyAPI.staticwebassets.endpoints.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\EasyApplyAPI.exe
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\EasyApplyAPI.deps.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\EasyApplyAPI.runtimeconfig.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\EasyApplyAPI.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\EasyApplyAPI.pdb
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Microsoft.OpenApi.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Npgsql.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\EasyApply.Infrastructure.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\bin\Debug\net9.0\EasyApply.Infrastructure.pdb
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.csproj.AssemblyReference.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.AssemblyInfoInputs.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.AssemblyInfo.cs
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.csproj.CoreCompileInputs.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.sourcelink.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\rjimswa.dswa.cache.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\scopedcss\bundle\EasyApplyAPI.styles.css
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\staticwebassets.build.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\staticwebassets.build.json.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\staticwebassets.development.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyAppl.25BDF81B.Up2Date
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\refint\EasyApplyAPI.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.pdb
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\EasyApplyAPI.genruntimeconfig.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApplyAPI\obj\Debug\net9.0\ref\EasyApplyAPI.dll

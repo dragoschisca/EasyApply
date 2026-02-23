@@ -1,0 +1,13 @@
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\bin\Debug\net9.0\EasyApply.Core.deps.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\bin\Debug\net9.0\EasyApply.Core.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\bin\Debug\net9.0\EasyApply.Core.pdb
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\EasyApply.Core.csproj.AssemblyReference.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\EasyApply.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\EasyApply.Core.AssemblyInfoInputs.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\EasyApply.Core.AssemblyInfo.cs
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\EasyApply.Core.csproj.CoreCompileInputs.cache
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\EasyApply.Core.sourcelink.json
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\EasyApply.Core.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\refint\EasyApply.Core.dll
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\EasyApply.Core.pdb
+C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Core\obj\Debug\net9.0\ref\EasyApply.Core.dll
