@@ -42,3 +42,10 @@ project.assets.json
 *.NuGet.targets
 *.NuGet.props
 
+# .NET build artifacts
+**/bin/
+**/obj/
+*.user
+*.suo
+*.cache
+*.DS_Store
