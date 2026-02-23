@@ -20,4 +20,4 @@
 *.pdb
 
 # Logs
-*.log
+.DS_Store
