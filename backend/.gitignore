@@ -41,3 +41,4 @@ project.assets.json
 *.NuGet.targets
 *.NuGet.props
 
+.DS_Store
