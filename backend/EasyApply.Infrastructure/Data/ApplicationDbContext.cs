@@ -1,3 +1,4 @@
+using EasyApply.Core.Entites;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyApplyAPI.Data;
@@ -8,4 +9,6 @@ public class ApplicationDbContext: DbContext
         : base(options)
     {
     }
+    
+    public DbSet<User> Users { get; set; }
 }

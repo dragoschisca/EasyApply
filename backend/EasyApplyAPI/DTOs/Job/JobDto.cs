@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EasyApply.Core.Enums;
 
 namespace EasyApplyAPI.DTOs.Job;
 

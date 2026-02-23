@@ -1,13 +1,29 @@
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\bin\Debug\net9.0\EasyApply.Infrastructure.deps.json
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\bin\Debug\net9.0\EasyApply.Infrastructure.dll
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\bin\Debug\net9.0\EasyApply.Infrastructure.pdb
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\EasyApply.Infrastructure.csproj.AssemblyReference.cache
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\EasyApply.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\EasyApply.Infrastructure.AssemblyInfoInputs.cache
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\EasyApply.Infrastructure.AssemblyInfo.cs
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\EasyApply.Infrastructure.csproj.CoreCompileInputs.cache
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\EasyApply.Infrastructure.sourcelink.json
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\EasyApply.Infrastructure.dll
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\refint\EasyApply.Infrastructure.dll
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\EasyApply.Infrastructure.pdb
-C:\Users\tgtft\OneDrive\Masaüstü\TWeb\EasyApply\backend\EasyApply.Infrastructure\obj\Debug\net9.0\ref\EasyApply.Infrastructure.dll
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/bin/Debug/net9.0/EasyApply.Infrastructure.deps.json
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/bin/Debug/net9.0/EasyApply.Infrastructure.dll
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/bin/Debug/net9.0/EasyApply.Infrastructure.pdb
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.csproj.AssemblyReference.cache
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.AssemblyInfoInputs.cache
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.AssemblyInfo.cs
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.sourcelink.json
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.dll
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/refint/EasyApply.Infrastructure.dll
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.pdb
+C:/Users/tgtft/OneDrive/Masaüstü/TWeb/EasyApply/backend/EasyApply.Infrastructure/obj/Debug/net9.0/ref/EasyApply.Infrastructure.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/bin/Debug/net9.0/EasyApply.Infrastructure.deps.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/bin/Debug/net9.0/EasyApply.Infrastructure.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/bin/Debug/net9.0/EasyApply.Infrastructure.pdb
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/bin/Debug/net9.0/EasyApply.Domains.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/bin/Debug/net9.0/EasyApply.Domains.pdb
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.csproj.AssemblyReference.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.AssemblyInfoInputs.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.AssemblyInfo.cs
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.sourcelink.json
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyAppl.041BCD79.Up2Date
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/refint/EasyApply.Infrastructure.dll
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/EasyApply.Infrastructure.pdb
+/Users/dragoschisca/Desktop/UTM/Anul 2/SEM 2/MSRT Web/EasyJob/backend/EasyApply.Infrastructure/obj/Debug/net9.0/ref/EasyApply.Infrastructure.dll

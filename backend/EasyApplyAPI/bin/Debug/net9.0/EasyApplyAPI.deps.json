@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v9.0": {
       "EasyApplyAPI/1.0.0": {
         "dependencies": {
+          "EasyApply.Domains": "1.0.0",
           "EasyApply.Infrastructure": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "9.0.13",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4",
@@ -236,9 +237,22 @@
           }
         }
       },
-      "EasyApply.Infrastructure/1.0.0": {
+      "EasyApply.Domains/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.12"
+        },
+        "runtime": {
+          "EasyApply.Domains.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "EasyApply.Infrastructure/1.0.0": {
+        "dependencies": {
+          "EasyApply.Domains": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "9.0.12",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4"
         },
         "runtime": {
           "EasyApply.Infrastructure.dll": {
@@ -408,6 +422,11 @@
       "sha512": "sha512-WGsw/Yop9b16miq8TQd4THxuEgkP5cH3+DX93BrX9m0OdPcKNtg2nNm77WQSAsA+Se+M0bTiu8bUyrruRSeS5g==",
       "path": "swashbuckle.aspnetcore.swaggerui/9.0.6",
       "hashPath": "swashbuckle.aspnetcore.swaggerui.9.0.6.nupkg.sha512"
+    },
+    "EasyApply.Domains/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "EasyApply.Infrastructure/1.0.0": {
       "type": "project",
