@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EasyApply.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+69943a01e04a086727bf2226b6b4e2a7d13be11c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c0f2c9fcf65102e08ee509123201e4f29c1e830")]
 [assembly: System.Reflection.AssemblyProductAttribute("EasyApply.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EasyApply.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
