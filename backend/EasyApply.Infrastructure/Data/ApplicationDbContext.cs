@@ -1,7 +1,7 @@
 using EasyApply.Core.Entites;
 using Microsoft.EntityFrameworkCore;
 
-namespace EasyApplyAPI.Data;
+namespace EasyApply.Infrastructure.Data;
 
 public class ApplicationDbContext: DbContext
 {
