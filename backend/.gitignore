@@ -1,25 +1,13 @@
-# Ignore all bin and obj folders in all subdirectories
-**/bin/
-**/obj/
+# Build artifacts
+/bin/
+/obj/
 
+# Rider & IDE files
+/.idea/
+/*.suo
+/*.user
+/*.userosscache
+/*.sln.docstates
+
+# macOS files
 .DS_Store
-
-# Optional: Visual Studio specific
-.vs/
-
-# Optional: Rider
-.idea/
-
-# Optional: User-specific files
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Build results
-*.dll
-*.exe
-*.pdb
-
-# Logs
-*.log.DS_Store
