@@ -1,10 +1,5 @@
-using System;
-using EasyApplyAPI.Data;
-using Microsoft.AspNetCore.Builder;
+using EasyApply.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 

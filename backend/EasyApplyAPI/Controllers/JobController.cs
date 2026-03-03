@@ -1,4 +1,4 @@
-using EasyApplyAPI.Data;
+using EasyApply.Infrastructure.Data;
 
 namespace EasyApplyAPI.Controllers;
 
