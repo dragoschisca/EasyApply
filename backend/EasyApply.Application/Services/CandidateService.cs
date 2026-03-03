@@ -1,4 +1,6 @@
-using AutoMapper;
+using EasyApply.Core.Exceptions;
+using EasyApply.Domains.Interfaces.Repositories;
+using EasyApply.Domains.Interfaces.Services;
 using EasyApplyAPI.DTOs.Candidate;
 
 namespace RecruitmentPlatform.Application.Services;
@@ -8,9 +10,7 @@ public class CandidateService : ICandidateService
     private readonly ICandidateRepository _candidateRepository;
     private readonly IMapper _mapper;
 
-    public CandidateService(
-        ICandidateRepository candidateRepository,
-        IMapper mapper)
+    public CandidateService(ICandidateRepository candidateRepository, IMapper mapper)
     {
         _candidateRepository = candidateRepository;
         _mapper = mapper;
@@ -96,7 +96,7 @@ public class CandidateService : ICandidateService
 
         candidate.UpdatedAt = DateTime.UtcNow;
 
-        _candidateRepository.Update(candidate);
+        _candidateRepository.UpdateAsync(candidate);
         await _candidateRepository.SaveChangesAsync();
 
         return _mapper.Map<CandidateDto>(candidate);
@@ -108,7 +108,7 @@ public class CandidateService : ICandidateService
         if (candidate == null)
             throw new NotFoundException("Candidate profile not found.");
 
-        _candidateRepository.Delete(candidate);
+        _candidateRepository.DeleteAsync(candidate);
         await _candidateRepository.SaveChangesAsync();
     }
 
