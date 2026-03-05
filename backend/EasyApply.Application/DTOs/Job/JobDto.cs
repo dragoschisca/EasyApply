@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using EasyApply.Core.Enums;
+﻿using EasyApply.Domains.Enums;
 
 namespace EasyApplyAPI.DTOs.Job;
 
