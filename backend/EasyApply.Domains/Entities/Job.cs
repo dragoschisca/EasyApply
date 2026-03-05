@@ -1,6 +1,4 @@
-using EasyApply.Core.Enums;
-
-namespace EasyApply.Core.Entites;
+namespace EasyApply.Domains.Enums;
 
 public class Job
 {

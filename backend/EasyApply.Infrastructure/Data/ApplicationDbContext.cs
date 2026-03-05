@@ -1,4 +1,4 @@
-using EasyApply.Core.Entites;
+using EasyApply.Domains.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyApply.Infrastructure.Data;

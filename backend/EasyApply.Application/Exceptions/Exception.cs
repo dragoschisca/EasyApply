@@ -1,4 +1,4 @@
-namespace EasyApply.Core.Exceptions;
+namespace EasyApply.Domains.Exceptions;
 
 public class NotFoundException : Exception
 {

@@ -1,4 +1,4 @@
-namespace EasyApply.Core.Entites;
+namespace EasyApply.Domains.Enums;
 
 public class Candidate
 {
