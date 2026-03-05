@@ -1,4 +1,4 @@
-﻿using EasyApply.Core.Entites;
+﻿using EasyApply.Domains.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -56,7 +56,7 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .HasColumnName("subscription_tier")
             .HasMaxLength(50)
             .HasConversion<string>()
-            .HasDefaultValue(Core.Enums.SubscriptionTier.Free);
+            .HasDefaultValue(Domains.Enums.SubscriptionTier.Free);
 
         builder.Property(c => c.SubscriptionExpiresAt)
             .HasColumnName("subscription_expires_at");

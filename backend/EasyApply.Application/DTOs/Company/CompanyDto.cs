@@ -1,5 +1,4 @@
-﻿using System;
-using EasyApply.Core.Enums;
+﻿using EasyApply.Domains.Enums;
 
 namespace EasyApplyAPI.DTOs.Company;
 
