@@ -1,75 +1,79 @@
-using EasyApply.Core.Exceptions;
+using EasyApply.Domains.Enums;
+using EasyApply.Domains.Exceptions;
 using EasyApply.Domains.Interfaces.Repositories;
 using EasyApply.Domains.Interfaces.Services;
 using EasyApplyAPI.DTOs.Candidate;
 
-namespace RecruitmentPlatform.Application.Services;
+namespace EasyApply.Application.Services;
 
 public class CandidateService : ICandidateService
 {
     private readonly ICandidateRepository _candidateRepository;
-    private readonly IMapper _mapper;
 
-    public CandidateService(ICandidateRepository candidateRepository, IMapper mapper)
+    public CandidateService(ICandidateRepository candidateRepository)
     {
         _candidateRepository = candidateRepository;
-        _mapper = mapper;
     }
 
     public async Task<CandidateDto> GetByIdAsync(Guid id)
     {
         var candidate = await _candidateRepository.GetWithDetailsAsync(id);
+
         if (candidate == null)
             throw new NotFoundException($"Candidate with ID {id} not found.");
 
-        return _mapper.Map<CandidateDto>(candidate);
+        return MapToDto(candidate);
     }
-
     public async Task<CandidateDto> GetByUserIdAsync(Guid userId)
     {
         var candidate = await _candidateRepository.GetByUserIdAsync(userId);
+
         if (candidate == null)
             throw new NotFoundException("Candidate profile not found.");
 
-        return _mapper.Map<CandidateDto>(candidate);
+        return MapToDto(candidate);
     }
-
-    public async Task<PagedResultDto<CandidateDto>> GetAllAsync(PaginationDto pagination)
+    public async Task<List<CandidateDto>> GetAllAsync(int page, int pageSize)
     {
-        var (candidates, totalCount) =
-            await _candidateRepository.GetPagedAsync(
-                pagination.Skip,
-                pagination.PageSize);
+        var skip = (page - 1) * pageSize;
 
-        var candidateDtos = _mapper.Map<List<CandidateDto>>(candidates);
+        var (candidates, _) =
+            await _candidateRepository.GetPagedAsync(skip, pageSize);
 
-        return PagedResultDto<CandidateDto>.Create(
-            candidateDtos,
-            totalCount,
-            pagination.Page,
-            pagination.PageSize);
+        return candidates.Select(MapToDto).ToList();
     }
-
     public async Task<CandidateDto> CreateAsync(Guid userId, CreateCandidateDto dto)
     {
         var existing = await _candidateRepository.GetByUserIdAsync(userId);
+
         if (existing != null)
             throw new BusinessException("Candidate profile already exists for this user.");
 
-        var candidate = _mapper.Map<Core.Entities.Candidate>(dto);
-        candidate.UserId = userId;
-        candidate.CreatedAt = DateTime.UtcNow;
-        candidate.UpdatedAt = DateTime.UtcNow;
+        var candidate = new Candidate
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Phone = dto.Phone,
+            Location = dto.Location,
+            LinkedInUrl = dto.LinkedInUrl,
+            PortfolioUrl = dto.PortfolioUrl,
+            Bio = dto.Bio,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
 
         await _candidateRepository.AddAsync(candidate);
         await _candidateRepository.SaveChangesAsync();
 
-        return _mapper.Map<CandidateDto>(candidate);
+        return MapToDto(candidate);
     }
 
     public async Task<CandidateDto> UpdateAsync(Guid userId, UpdateCandidateDto dto)
     {
         var candidate = await _candidateRepository.GetByUserIdAsync(userId);
+
         if (candidate == null)
             throw new NotFoundException("Candidate profile not found.");
 
@@ -96,25 +100,44 @@ public class CandidateService : ICandidateService
 
         candidate.UpdatedAt = DateTime.UtcNow;
 
-        _candidateRepository.UpdateAsync(candidate);
+        await _candidateRepository.UpdateAsync(candidate);
         await _candidateRepository.SaveChangesAsync();
 
-        return _mapper.Map<CandidateDto>(candidate);
+        return MapToDto(candidate);
     }
 
     public async Task DeleteAsync(Guid userId)
     {
         var candidate = await _candidateRepository.GetByUserIdAsync(userId);
+
         if (candidate == null)
             throw new NotFoundException("Candidate profile not found.");
 
-        _candidateRepository.DeleteAsync(candidate);
+        await _candidateRepository.DeleteAsync(candidate);
         await _candidateRepository.SaveChangesAsync();
     }
 
     public async Task<List<CandidateDto>> SearchAsync(string searchTerm)
     {
         var candidates = await _candidateRepository.SearchAsync(searchTerm);
-        return _mapper.Map<List<CandidateDto>>(candidates);
+
+        return candidates.Select(MapToDto).ToList();
+    }
+    
+    private static CandidateDto MapToDto(Candidate candidate)
+    {
+        return new CandidateDto
+        {
+            Id = candidate.Id,
+            UserId = candidate.UserId,
+            FirstName = candidate.FirstName,
+            LastName = candidate.LastName,
+            Phone = candidate.Phone,
+            Location = candidate.Location,
+            LinkedInUrl = candidate.LinkedInUrl,
+            PortfolioUrl = candidate.PortfolioUrl,
+            Bio = candidate.Bio,
+            CreatedAt = candidate.CreatedAt,
+        };
     }
 }
