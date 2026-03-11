@@ -1,6 +1,6 @@
 ﻿using EasyApply.Domains.Enums;
 
-namespace EasyApplyAPI.DTOs.Job;
+namespace EasyApply.Application.DTOs.Job;
 
 public class JobDto
 {

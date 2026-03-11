@@ -1,6 +1,6 @@
 ﻿using EasyApply.Domains.Enums;
 
-namespace EasyApplyAPI.DTOs.Company;
+namespace EasyApply.Application.DTOs.Company;
 
 public class CompanyDto
 {

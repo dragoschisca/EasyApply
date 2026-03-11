@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EasyApplyAPI.DTOs.Candidate;
+namespace EasyApply.Application.DTOs.Candidate;
 
 public class CandidateDto
 {

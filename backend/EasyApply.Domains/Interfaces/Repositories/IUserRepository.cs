@@ -1,7 +1,7 @@
-﻿using EasyApply.Domains.Enums;
+﻿using EasyApply.Domains.Entities;
 using EasyApply.Domains.Interfaces.Repositories;
 
-namespace EasyApply.Core.Interfaces.Repositories;
+namespace EasyApply.Domains.Interfaces.Repositories;
 
 public interface IUserRepository : IBaseRepository<User>
 {

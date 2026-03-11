@@ -1,4 +1,4 @@
-﻿namespace EasyApplyAPI.DTOs.Auth;
+﻿namespace EasyApply.Application.DTOs.Auth;
 
 public class RegisterRequestDto
 {

@@ -1,4 +1,4 @@
-﻿using EasyApply.Domains.Enums;
+﻿using EasyApply.Domains.Entities;
 
 namespace EasyApply.Domains.Interfaces.Repositories;
 

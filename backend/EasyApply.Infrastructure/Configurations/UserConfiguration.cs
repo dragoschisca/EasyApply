@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using EasyApply.Domains.Enums;
+using EasyApply.Domains.Entities;
 
 namespace EasyApply.Infrastructure.Data.Configurations;
 

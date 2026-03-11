@@ -1,4 +1,4 @@
-﻿using EasyApply.Domains.Enums;
+﻿using EasyApply.Domains.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
