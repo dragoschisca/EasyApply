@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\EasyApply.Application\EasyApply.Application.csproj" />
       <ProjectReference Include="..\EasyApply.Domains\EasyApply.Domains.csproj" />
       <ProjectReference Include="..\EasyApply.Infrastructure\EasyApply.Infrastructure.csproj" />
     </ItemGroup>
