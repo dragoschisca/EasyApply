@@ -4,6 +4,7 @@ using EasyApply.Domains.Enums;
 using EasyApply.Domains.Exceptions;
 using EasyApply.Domains.Interfaces.Repositories;
 using EasyApply.Application.Interfaces.Services;
+using EasyApply.Domains.Interfaces.Services;
 
 namespace EasyApply.Application.Services;
 
