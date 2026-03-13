@@ -1,8 +1,8 @@
 using EasyApply.Application.Interfaces.Services;
 using EasyApply.Application.Services;
 using EasyApply.Domains.Interfaces.Repositories;
+using EasyApply.Domains.Interfaces.Services;
 using EasyApply.Infrastructure.Data;
-using EasyApply.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
