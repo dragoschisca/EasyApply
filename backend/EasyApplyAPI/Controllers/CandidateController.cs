@@ -1,3 +1,4 @@
+using EasyApply.Domains.Interfaces.Services;
 using global::EasyApply.Application.Interfaces.Services;
 using global::EasyApply.Application.DTOs.Candidate;
 using Microsoft.AspNetCore.Mvc;
