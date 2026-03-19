@@ -8,6 +8,8 @@ public class Job
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Requirements { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+
     public string? RequiredSkills { get; set; } // JSON string
     public WorkTime EmploymentType { get; set; }
     public ExperienceLevel ExperienceLevel { get; set; }
