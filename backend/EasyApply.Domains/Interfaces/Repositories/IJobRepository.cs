@@ -2,7 +2,7 @@
 
 namespace EasyApply.Domains.Interfaces.Repositories;
 
-public interface IJobRepository : EasyApply.Domains.Interfaces.Repositories.IBaseRepository<Job>
+public interface IJobRepository : IBaseRepository<Job>
 {
     Task<IEnumerable<Job>> GetByCompanyIdAsync(Guid companyId, bool activeOnly = true);
     Task<(IEnumerable<Job> Jobs, int Total)> SearchAsync(

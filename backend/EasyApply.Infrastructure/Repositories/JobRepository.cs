@@ -1,3 +1,4 @@
+
 using EasyApply.Domains.Entities;
 using EasyApply.Domains.Interfaces.Repositories;
 using EasyApply.Infrastructure.Data;
@@ -62,10 +63,13 @@ public class JobRepository : IJobRepository
     }
 
     public async Task<(IEnumerable<Job> Jobs, int Total)> SearchAsync(
-        string? keyword, string? location, string? category,
-        string? employmentType, string? experienceLevel,
-        decimal? minSalary, decimal? maxSalary,
-        bool? isRemote, int page, int pageSize)
+        string? keyword,
+        string? location,
+        string? employmentType,
+        string? experienceLevel,
+        bool? isRemote,
+        int page,
+        int pageSize)
     {
         var query = _context.Jobs
             .Include(j => j.Company)
@@ -86,18 +90,6 @@ public class JobRepository : IJobRepository
             var lowerLocation = location.ToLower();
             query = query.Where(j => j.Location != null && j.Location.ToLower().Contains(lowerLocation));
         }
-
-        if (!string.IsNullOrWhiteSpace(category))
-        {
-            var lowerCategory = category.ToLower();
-            query = query.Where(j => j.Category.ToLower().Contains(lowerCategory));
-        }
-
-        if (minSalary.HasValue)
-            query = query.Where(j => j.SalaryMax >= minSalary.Value || j.SalaryMin >= minSalary.Value);
-
-        if (maxSalary.HasValue)
-            query = query.Where(j => j.SalaryMin <= maxSalary.Value);
 
         if (!string.IsNullOrWhiteSpace(employmentType) &&
             Enum.TryParse<EasyApply.Domains.Enums.WorkTime>(employmentType, true, out var et))

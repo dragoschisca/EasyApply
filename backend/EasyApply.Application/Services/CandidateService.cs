@@ -1,9 +1,8 @@
 using EasyApply.Application.DTOs.Candidate;
 using EasyApply.Domains.Entities;
-using EasyApply.Domains.Enums;
 using EasyApply.Domains.Exceptions;
 using EasyApply.Domains.Interfaces.Repositories;
-using EasyApply.Domains.Interfaces.Services;
+using EasyApply.Application.Interfaces.Services;
 
 namespace EasyApply.Application.Services;
 
