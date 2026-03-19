@@ -1,6 +1,5 @@
-using EasyApply.Domains.Interfaces.Services;
-using global::EasyApply.Application.Interfaces.Services;
-using global::EasyApply.Application.DTOs.Candidate;
+using EasyApply.Application.DTOs.Candidate;
+using EasyApply.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyApplyAPI.Controllers;
