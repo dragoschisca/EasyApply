@@ -1,4 +1,4 @@
-namespace EasyApply.Core.Enums;
+namespace EasyApply.Domains.Enums;
 
 public enum LocationType
 {

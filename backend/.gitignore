@@ -1,44 +1,23 @@
-# Fișiere generate de sistem
-.DS_Store
-Thumbs.db
+# Ignore all bin and obj folders in all subdirectories
+**/bin/
+**/obj/
 
-# Foldere și fișiere build
-/build/
-dist/
+# Optional: Visual Studio specific
+.vs/
 
-# Fișiere de log
-# =========================
-# Build outputs
-# =========================
-bin/
-obj/
-*.target
-*.dll
-*.pdb
-*.deps.json
-*.runtimeconfig.json
-*.staticwebassets.*.json
+# Optional: Rider
+.idea/
 
-# =========================
-# Cache / temporary files
-# =========================
-.cache/
-*.cache
-*.suo
+# Optional: User-specific files
 *.user
+*.suo
 *.userosscache
 *.sln.docstates
-*.DS_Store
 
-# Rider / IDE / Editor
-.idea/
-*.iml
-*.log
+# Build results
+*.dll
+*.exe
+*.pdb
 
-# Nu urca pachete / restore-uri locale
-project.assets.json
-*.nuget.cache
-*.NuGet.targets
-*.NuGet.props
-
+# Logs
 .DS_Store
