@@ -1,4 +1,4 @@
-using EasyApply.Domain.Models.Enums;
+using EasyApply.Domain.Enums;
 namespace EasyApply.Domain.Entities;
 
 public class User

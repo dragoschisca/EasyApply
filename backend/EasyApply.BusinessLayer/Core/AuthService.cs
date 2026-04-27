@@ -5,8 +5,8 @@ using BCrypt.Net;
 using EasyApply.BusinessLayer.Structure.DTOs.Auth;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.Domain.Entities;
-using EasyApply.Domain.Models.Enums;
-using EasyApply.Domain.Models.Interfaces.Repositories;
+using EasyApply.Domain.Enums;
+using EasyApply.Domain.Interfaces.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 

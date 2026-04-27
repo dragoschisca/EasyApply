@@ -1,6 +1,6 @@
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.BusinessLayer.Core;
-using EasyApply.Domain.Models.Interfaces.Repositories;
+using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.DataAccess.Data;
 using EasyApply.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-namespace EasyApply.Domain.Models.Enums;
+namespace EasyApply.Domain.Enums;
 
 public enum SubscriptionTier
 {

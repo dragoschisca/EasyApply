@@ -1,4 +1,4 @@
-using EasyApply.Domain.Models.Enums;
+using EasyApply.Domain.Enums;
 
 namespace EasyApply.BusinessLayer.Structure.DTOs.Job;
 

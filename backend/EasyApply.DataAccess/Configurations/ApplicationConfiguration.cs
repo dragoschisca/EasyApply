@@ -1,5 +1,5 @@
 using EasyApply.Domain.Entities;
-using EasyApply.Domain.Models.Enums;
+using EasyApply.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

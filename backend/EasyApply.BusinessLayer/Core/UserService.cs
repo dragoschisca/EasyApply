@@ -1,6 +1,6 @@
 using EasyApply.BusinessLayer.Structure.DTOs.User;
 using EasyApply.Domain.Exceptions;
-using EasyApply.Domain.Models.Interfaces.Repositories;
+using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.Domain.Entities;
 

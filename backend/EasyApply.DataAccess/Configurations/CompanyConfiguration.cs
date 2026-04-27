@@ -56,7 +56,7 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .HasColumnName("subscription_tier")
             .HasMaxLength(50)
             .HasConversion<string>()
-            .HasDefaultValue(Domain.Models.Enums.SubscriptionTier.Free);
+            .HasDefaultValue(EasyApply.Domain.Enums.SubscriptionTier.Free);
 
         builder.Property(c => c.SubscriptionExpiresAt)
             .HasColumnName("subscription_expires_at");

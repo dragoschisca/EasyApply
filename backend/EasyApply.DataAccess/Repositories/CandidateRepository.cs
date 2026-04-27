@@ -1,5 +1,5 @@
 using EasyApply.Domain.Entities;
-using EasyApply.Domain.Models.Interfaces.Repositories;
+using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 
