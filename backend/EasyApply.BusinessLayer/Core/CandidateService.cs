@@ -1,7 +1,7 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Candidate;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Exceptions;
-using EasyApply.Domain.Models.Interfaces.Repositories;
+using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
 
 namespace EasyApply.BusinessLayer.Core;

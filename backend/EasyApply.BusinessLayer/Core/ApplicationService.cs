@@ -1,8 +1,8 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Application;
 using EasyApply.Domain.Entities;
-using EasyApply.Domain.Models.Enums;
+using EasyApply.Domain.Enums;
 using EasyApply.Domain.Exceptions;
-using EasyApply.Domain.Models.Interfaces.Repositories;
+using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
 
 namespace EasyApply.BusinessLayer.Core;

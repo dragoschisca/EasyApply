@@ -1,7 +1,7 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Job;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.Domain.Entities;
-using EasyApply.Domain.Models.Interfaces.Repositories;
+using EasyApply.Domain.Interfaces.Repositories;
 using System.Text.Json;
 
 namespace EasyApply.BusinessLayer.Core;

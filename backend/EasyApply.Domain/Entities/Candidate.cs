@@ -1,4 +1,4 @@
-using EasyApply.Domain.Models.Enums;
+using EasyApply.Domain.Enums;
 namespace EasyApply.Domain.Entities;
 
 public class Candidate
@@ -10,6 +10,7 @@ public class Candidate
     public string? Phone { get; set; }
     public string? Location { get; set; }
     public string? LinkedInUrl { get; set; }
+    public string? GitHubUrl { get; set; }
     public string? PortfolioUrl { get; set; }
     public string? Bio { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

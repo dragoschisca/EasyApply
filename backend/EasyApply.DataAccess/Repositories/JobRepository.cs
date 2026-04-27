@@ -1,6 +1,6 @@
 
 using EasyApply.Domain.Entities;
-using EasyApply.Domain.Models.Interfaces.Repositories;
+using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -92,11 +92,11 @@ public class JobRepository : IJobRepository
         }
 
         if (!string.IsNullOrWhiteSpace(employmentType) &&
-            Enum.TryParse<EasyApply.Domain.Models.Enums.WorkTime>(employmentType, true, out var et))
+            Enum.TryParse<EasyApply.Domain.Enums.WorkTime>(employmentType, true, out var et))
             query = query.Where(j => j.EmploymentType == et);
 
         if (!string.IsNullOrWhiteSpace(experienceLevel) &&
-            Enum.TryParse<EasyApply.Domain.Models.Enums.ExperienceLevel>(experienceLevel, true, out var el))
+            Enum.TryParse<EasyApply.Domain.Enums.ExperienceLevel>(experienceLevel, true, out var el))
             query = query.Where(j => j.ExperienceLevel == el);
 
         if (isRemote.HasValue)
