@@ -42,9 +42,10 @@ public class CVController : ControllerBase
 
     // POST: api/cv/{candidateId}
     [HttpPost("{candidateId:guid}")]
-    public async Task<IActionResult> Create(Guid candidateId, [FromBody] CreateCVDto dto)
+    public async Task<IActionResult> Create(Guid candidateId, [FromForm] string fileName, [FromForm] bool isPrimary, IFormFile file)
     {
-        var result = await _cvService.CreateAsync(candidateId, dto);
+        using var stream = file.OpenReadStream();
+        var result = await _cvService.CreateAsync(candidateId, fileName, stream, file.Length, isPrimary);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
