@@ -32,10 +32,10 @@ public class JobService : IJobService
     }
 
     public async Task<(IEnumerable<JobDto> Jobs, int Total)> SearchAsync(
-        string? keyword, string? location, string? employmentType,
-        string? experienceLevel, bool? isRemote, int page, int pageSize)
+        string? keyword, string? location, string? category, string? employmentType,
+        string? experienceLevel, int? locationType, int page, int pageSize)
     {
-        var result = await _jobRepository.SearchAsync(keyword, location, employmentType, experienceLevel, isRemote, page, pageSize);
+        var result = await _jobRepository.SearchAsync(keyword, location, category, employmentType, experienceLevel, locationType, page, pageSize);
         return (result.Jobs.Select(MapToDto), result.Total);
     }
 
