@@ -38,14 +38,15 @@ public class JobController : ControllerBase
     public async Task<IActionResult> Search(
         [FromQuery] string? keyword,
         [FromQuery] string? location,
+        [FromQuery] string? category,
         [FromQuery] string? employmentType,
         [FromQuery] string? experienceLevel,
-        [FromQuery] bool? isRemote,
+        [FromQuery] int? locationType,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
         var (jobs, total) = await _jobService.SearchAsync(
-            keyword, location, employmentType, experienceLevel, isRemote, page, pageSize);
+            keyword, location, category, employmentType, experienceLevel, locationType, page, pageSize);
         return Ok(new { Jobs = jobs, Total = total, Page = page, PageSize = pageSize });
     }
 
