@@ -3,6 +3,7 @@ using EasyApply.Domain.Entities;
 using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
+using System.IO;
 
 namespace EasyApply.BusinessLayer.Core;
 
@@ -36,30 +37,37 @@ public class CVService : ICVService
         return cv != null ? MapToDto(cv) : null;
     }
 
-    public async Task<CVDto> CreateAsync(Guid candidateId, CreateCVDto dto)
+    public async Task<CVDto> CreateAsync(Guid candidateId, string fileName, Stream fileStream, long fileLength, bool isPrimary)
     {
         var candidate = await _candidateRepository.GetWithDetailsAsync(candidateId);
         if (candidate == null) throw new NotFoundException($"Candidate with ID {candidateId} not found.");
+
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "cvs");
+        if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+        var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await fileStream.CopyToAsync(stream);
+        }
 
         var cv = new CV
         {
             Id = Guid.NewGuid(),
             CandidateId = candidateId,
-            FileName = dto.FileName,
-            FilePath = dto.FilePath,
-            FileSize = dto.FileSize,
-            ParsedContent = dto.ParsedContent,
-            Skills = dto.Skills,
-            Experience = dto.Experience,
-            Education = dto.Education,
-            IsPrimary = dto.IsPrimary,
+            FileName = fileName,
+            FilePath = $"/uploads/cvs/{uniqueFileName}",
+            FileSize = (int)fileLength,
+            IsPrimary = isPrimary,
             UploadedAt = DateTime.UtcNow
         };
 
         await _cvRepository.AddAsync(cv);
         await _cvRepository.SaveChangesAsync();
 
-        if (dto.IsPrimary)
+        if (isPrimary)
         {
             await _cvRepository.SetPrimaryAsync(cv.Id, candidateId);
             await _cvRepository.SaveChangesAsync();
