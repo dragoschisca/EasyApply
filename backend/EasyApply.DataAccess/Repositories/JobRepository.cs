@@ -65,9 +65,10 @@ public class JobRepository : IJobRepository
     public async Task<(IEnumerable<Job> Jobs, int Total)> SearchAsync(
         string? keyword,
         string? location,
+        string? category,
         string? employmentType,
         string? experienceLevel,
-        bool? isRemote,
+        int? locationType,
         int page,
         int pageSize)
     {
@@ -91,6 +92,11 @@ public class JobRepository : IJobRepository
             query = query.Where(j => j.Location != null && j.Location.ToLower().Contains(lowerLocation));
         }
 
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            query = query.Where(j => j.Category == category);
+        }
+
         if (!string.IsNullOrWhiteSpace(employmentType) &&
             Enum.TryParse<EasyApply.Domain.Enums.WorkTime>(employmentType, true, out var et))
             query = query.Where(j => j.EmploymentType == et);
@@ -99,8 +105,10 @@ public class JobRepository : IJobRepository
             Enum.TryParse<EasyApply.Domain.Enums.ExperienceLevel>(experienceLevel, true, out var el))
             query = query.Where(j => j.ExperienceLevel == el);
 
-        if (isRemote.HasValue)
-            query = query.Where(j => j.IsRemote == isRemote.Value);
+        if (locationType.HasValue)
+        {
+            query = query.Where(j => (int)j.LocationType == locationType.Value);
+        }
 
         var total = await query.CountAsync();
         var skip = (page - 1) * pageSize;
