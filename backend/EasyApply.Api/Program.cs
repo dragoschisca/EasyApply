@@ -1,3 +1,4 @@
+using EasyApply.Api;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.BusinessLayer.Core;
 using EasyApply.Domain.Interfaces.Repositories;
@@ -40,6 +41,33 @@ builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            // Allow local dev AND deployed Vercel frontend
+            var allowedOrigins = new List<string>
+            {
+                "http://localhost:4200",
+                "https://localhost:4200"
+            };
+
+            // Read Vercel URL from env (set this on Render)
+            var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
+            if (!string.IsNullOrEmpty(frontendUrl))
+            {
+                allowedOrigins.Add(frontendUrl);
+            }
+
+            policy.WithOrigins(allowedOrigins.ToArray())
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -48,6 +76,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    await DbInitializer.SeedData(context);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -55,5 +90,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 app.MapControllers();
 app.Run();
