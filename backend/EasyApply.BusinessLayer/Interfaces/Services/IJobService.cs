@@ -13,4 +13,5 @@ public interface IJobService
     Task<JobDto> UpdateAsync(Guid id, UpdateJobDto dto);
     Task DeleteAsync(Guid id);
     Task IncrementViewCountAsync(Guid id);
+    Task<IEnumerable<JobDto>> GetRecommendationsAsync(Guid id, int count);
 }

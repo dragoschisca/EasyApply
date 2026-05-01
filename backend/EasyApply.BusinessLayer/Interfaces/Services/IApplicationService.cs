@@ -1,4 +1,5 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Application;
+using EasyApply.BusinessLayer.Structure.DTOs.AI;
 
 namespace EasyApply.BusinessLayer.Interfaces.Services;
 
@@ -10,4 +11,5 @@ public interface IApplicationService
     Task<ApplicationDto> CreateAsync(Guid candidateId, CreateApplicationDto dto);
     Task<ApplicationDto> UpdateStatusAsync(Guid id, UpdateApplicationStatusDto dto);
     Task DeleteAsync(Guid id);
+    Task<CompatibilityResultDto> AnalyzeAsync(Guid id);
 }

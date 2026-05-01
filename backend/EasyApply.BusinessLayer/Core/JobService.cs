@@ -112,6 +112,20 @@ public class JobService : IJobService
         await _jobRepository.IncrementViewCountAsync(id);
     }
 
+    public async Task<IEnumerable<JobDto>> GetRecommendationsAsync(Guid id, int count)
+    {
+        var job = await _jobRepository.GetByIdAsync(id);
+        if (job == null) return Enumerable.Empty<JobDto>();
+
+        // For now, simple recommendation based on same company or category if available
+        var allJobs = await _jobRepository.GetAllAsync();
+        var recommendations = allJobs
+            .Where(j => j.Id != id && j.IsActive && j.CompanyId == job.CompanyId)
+            .Take(count);
+
+        return recommendations.Select(MapToDto);
+    }
+
     private static JobDto MapToDto(Job job)
     {
         var dto = new JobDto

@@ -62,4 +62,12 @@ public class ApplicationController : ControllerBase
         await _applicationService.DeleteAsync(id);
         return NoContent();
     }
+
+    // POST: api/application/{id}/analyze
+    [HttpPost("{id:guid}/analyze")]
+    public async Task<IActionResult> Analyze(Guid id)
+    {
+        var result = await _applicationService.AnalyzeAsync(id);
+        return Ok(result);
+    }
 }

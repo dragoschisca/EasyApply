@@ -1,4 +1,5 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Application;
+using EasyApply.BusinessLayer.Structure.DTOs.AI;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Enums;
 using EasyApply.Domain.Exceptions;
@@ -11,11 +12,13 @@ public class ApplicationService : IApplicationService
 {
     private readonly IApplicationRepository _applicationRepository;
     private readonly IJobRepository _jobRepository;
+    private readonly IGeminiService _geminiService;
 
-    public ApplicationService(IApplicationRepository applicationRepository, IJobRepository jobRepository)
+    public ApplicationService(IApplicationRepository applicationRepository, IJobRepository jobRepository, IGeminiService geminiService)
     {
         _applicationRepository = applicationRepository;
         _jobRepository = jobRepository;
+        _geminiService = geminiService;
     }
 
     public async Task<ApplicationDto> GetByIdAsync(Guid id)
@@ -90,6 +93,35 @@ public class ApplicationService : IApplicationService
 
         await _applicationRepository.DeleteAsync(application);
         await _applicationRepository.SaveChangesAsync();
+    }
+
+    public async Task<CompatibilityResultDto> AnalyzeAsync(Guid id)
+    {
+        var application = await _applicationRepository.GetWithDetailsAsync(id);
+        if (application == null) throw new NotFoundException($"Application with ID {id} not found.");
+
+        if (application.CV == null || string.IsNullOrEmpty(application.CV.FilePath))
+            throw new BusinessException("Application has no CV to analyze.");
+
+        if (application.Job == null)
+            throw new BusinessException("Application has no Job associated.");
+
+        // Convert virtual path (/uploads/cvs/...) to physical path
+        var filePath = application.CV.FilePath.TrimStart('/');
+        var fullCvPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
+
+        var result = await _geminiService.GetCompatibilityResultAsync(
+            fullCvPath,
+            application.Job.Title,
+            application.Job.Description,
+            application.Job.RequiredSkills ?? string.Empty);
+
+        application.CompatibilityScore = (decimal)result.Score;
+        
+        await _applicationRepository.UpdateAsync(application);
+        await _applicationRepository.SaveChangesAsync();
+
+        return result;
     }
 
     private static ApplicationDto MapToDto(EasyApply.Domain.Entities.Application application)

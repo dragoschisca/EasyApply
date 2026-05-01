@@ -81,4 +81,12 @@ public class JobController : ControllerBase
         await _jobService.IncrementViewCountAsync(id);
         return NoContent();
     }
+
+    // GET: api/job/recommendations/{id}?count=5
+    [HttpGet("recommendations/{id:guid}")]
+    public async Task<IActionResult> GetRecommendations(Guid id, [FromQuery] int count = 5)
+    {
+        var result = await _jobService.GetRecommendationsAsync(id, count);
+        return Ok(result);
+    }
 }

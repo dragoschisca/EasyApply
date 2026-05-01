@@ -6,6 +6,7 @@ using EasyApply.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using System.Text.Json.Serialization;
+using EasyApply.BusinessLayer.Core.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +58,9 @@ builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IGeminiService, GeminiService>();
+
+builder.Services.AddHttpClient();
 
 #endregion
 
