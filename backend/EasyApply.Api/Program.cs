@@ -68,16 +68,26 @@ builder.Services.AddCors(options =>
         var allowedOrigins = new List<string>
         {
             "http://localhost:4200",
-            "https://localhost:4200"
+            "https://localhost:4200",
+            "http://localhost:5077",
+            "https://localhost:5077"
         };
 
-        var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
-        if (!string.IsNullOrEmpty(frontendUrl))
+        // Add from Environment Variable (Comma-separated)
+        var envFrontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
+        if (!string.IsNullOrEmpty(envFrontendUrl))
         {
-            allowedOrigins.Add(frontendUrl);
+            allowedOrigins.AddRange(envFrontendUrl.Split(',', StringSplitOptions.RemoveEmptyEntries));
         }
 
-        policy.WithOrigins(allowedOrigins.ToArray())
+        // Add from Configuration
+        var configFrontendUrl = builder.Configuration["Cors:FrontendUrl"];
+        if (!string.IsNullOrEmpty(configFrontendUrl))
+        {
+            allowedOrigins.Add(configFrontendUrl);
+        }
+
+        policy.WithOrigins(allowedOrigins.Distinct().ToArray())
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
