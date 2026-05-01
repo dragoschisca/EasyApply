@@ -17,4 +17,14 @@ public class ApplicationDbContext: DbContext
     public DbSet<CV> CVs { get; set; }
     public DbSet<Application> Applications { get; set; }
     public DbSet<SavedJob> SavedJobs { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasIndex(u => u.Email).IsUnique();
+        });
+    }
 }
