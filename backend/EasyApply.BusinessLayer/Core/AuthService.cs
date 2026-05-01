@@ -148,7 +148,26 @@ public class AuthService : IAuthService
     private string GenerateJwtToken(User user)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]!));
+        
+        var secret = jwtSettings["Secret"] 
+                    ?? _configuration["JWT_SECRET"] 
+                    ?? Environment.GetEnvironmentVariable("JWT_SECRET");
+
+        if (string.IsNullOrEmpty(secret))
+        {
+            throw new Exception("JWT Secret is not configured. Please set 'Jwt:Secret' in appsettings.json or 'JWT_SECRET' in environment variables.");
+        }
+
+        var issuer = jwtSettings["Issuer"] ?? _configuration["JWT_ISSUER"] ?? "EasyApply";
+        var audience = jwtSettings["Audience"] ?? _configuration["JWT_AUDIENCE"] ?? "EasyApplyUsers";
+        var expiryMinutesStr = jwtSettings["ExpiryMinutes"] ?? _configuration["JWT_EXPIRY_MINUTES"] ?? "60";
+        
+        if (!double.TryParse(expiryMinutesStr, out double expiryMinutes))
+        {
+            expiryMinutes = 60;
+        }
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
@@ -160,10 +179,10 @@ public class AuthService : IAuthService
         };
 
         var token = new JwtSecurityToken(
-            issuer: jwtSettings["Issuer"],
-            audience: jwtSettings["Audience"],
+            issuer: issuer,
+            audience: audience,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(double.Parse(jwtSettings["ExpiryMinutes"]!)),
+            expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
             signingCredentials: creds
         );
 
