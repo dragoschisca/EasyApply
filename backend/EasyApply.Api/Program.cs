@@ -16,8 +16,6 @@ var connectionString =
     Environment.GetEnvironmentVariable("SUPABASE_CONNECTION_STRING")
     ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
-Console.WriteLine(connectionString);
-
 if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new Exception("Database connection string is missing.");
@@ -94,11 +92,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "EasyApply API V1");
+    options.RoutePrefix = "swagger"; // Standard: Accessible at /swagger
+});
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
