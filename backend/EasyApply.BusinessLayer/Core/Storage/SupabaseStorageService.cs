@@ -14,14 +14,22 @@ public class SupabaseStorageService : ISupabaseStorageService
     public SupabaseStorageService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
-        _supabaseUrl = configuration["Supabase:Url"] 
-                      ?? Environment.GetEnvironmentVariable("SUPABASE_URL") 
-                      ?? string.Empty;
-        _supabaseKey = configuration["Supabase:Key"] 
-                      ?? Environment.GetEnvironmentVariable("SUPABASE_KEY") 
-                      ?? string.Empty;
-    }
 
+        _supabaseUrl = (configuration["Supabase:Url"] 
+                        ?? Environment.GetEnvironmentVariable("SUPABASE_URL") 
+                        ?? string.Empty).TrimEnd('/');
+    
+        _supabaseKey = configuration["Supabase:Key"] 
+                       ?? Environment.GetEnvironmentVariable("SUPABASE_KEY") 
+                       ?? string.Empty;
+        if (string.IsNullOrEmpty(_supabaseUrl) || string.IsNullOrEmpty(_supabaseKey))
+        {
+            throw new InvalidOperationException("Supabase URL or Key is missing in configuration/environment variables.");
+        }
+
+        Console.WriteLine($"[SupabaseStorage] Initialized with URL: {_supabaseUrl}");
+        Console.WriteLine($"[SupabaseStorage] Initialized with Key: {_supabaseKey}");
+    }
     public async Task<string> UploadFileAsync(string bucket, string fileName, Stream content)
     {
         using var client = _httpClientFactory.CreateClient();
@@ -49,8 +57,12 @@ public class SupabaseStorageService : ISupabaseStorageService
         using var client = _httpClientFactory.CreateClient();
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_supabaseKey}");
         client.DefaultRequestHeaders.Add("apikey", _supabaseKey);
-
-        var url = $"{_supabaseUrl}/storage/v1/object/{bucket}/{fileName}";
+        
+        // Ensure fileName is encoded for the URL
+        var encodedFileName = Uri.EscapeDataString(fileName);
+        var url = $"{_supabaseUrl}/storage/v1/object/{bucket}/{encodedFileName}";
+    
+        Console.WriteLine($"[SupabaseStorage] Downloading: {url}");
         
         var response = await client.GetAsync(url);
         
