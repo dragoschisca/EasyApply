@@ -4,7 +4,9 @@ using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.BusinessLayer.Structure.DTOs.AI;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
-using UglyToad.PdfPig;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
 
 namespace EasyApply.BusinessLayer.Core.AI;
 
@@ -174,53 +176,33 @@ public class GeminiService : IGeminiService
 
         return result;
     }
-
-    private string ExtractWithOption(Stream pdfStream, ParsingOptions options)
-    {
-        StringBuilder text = new StringBuilder();
-        // Ensure stream is at the beginning
-        pdfStream.Position = 0;
-        using (var document = PdfDocument.Open(pdfStream, options))
-        {
-            foreach (var page in document.GetPages())
-            {
-                var pageText = page.Text;
-                if (!string.IsNullOrWhiteSpace(pageText))
-                {
-                    text.Append(pageText);
-                }
-            }
-        }
-        return text.ToString();
-    }
-
+    
     private string ExtractText(Stream pdfStream)
     {
         try 
         {
-            // Try with lenient parsing first
-            try 
+            Console.WriteLine("[AI-DEBUG] Starting iText7 text extraction...");
+            pdfStream.Position = 0;
+            
+            var text = new StringBuilder();
+            using (var reader = new PdfReader(pdfStream))
+            using (var pdfDoc = new PdfDocument(reader))
             {
-                return ExtractWithOption(pdfStream, new ParsingOptions { UseLenientParsing = true });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[AI-DEBUG] PdfPig lenient extraction failed: {ex.Message}. Trying default...");
-                // Fallback to default parsing
-                try 
+                for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
                 {
-                    return ExtractWithOption(pdfStream, new ParsingOptions { UseLenientParsing = false });
-                }
-                catch (Exception ex2)
-                {
-                    Console.WriteLine($"[AI-DEBUG] Default extraction also failed: {ex2.Message}");
-                    throw;
+                    var page = pdfDoc.GetPage(i);
+                    var strategy = new SimpleTextExtractionStrategy();
+                    var pageText = PdfTextExtractor.GetTextFromPage(page, strategy);
+                    text.AppendLine(pageText);
                 }
             }
+            var result = text.ToString().Trim();
+            Console.WriteLine($"[AI-DEBUG] iText7 extracted {result.Length} characters.");
+            return result;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[AI-DEBUG] Critical failure in ExtractText: {ex.Message}");
+            Console.WriteLine($"[AI-DEBUG] iText7 extraction failed: {ex.Message}");
             return string.Empty;
         }
     }
