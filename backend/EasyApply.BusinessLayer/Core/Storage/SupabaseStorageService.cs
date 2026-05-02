@@ -36,14 +36,28 @@ public class SupabaseStorageService : ISupabaseStorageService
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_supabaseKey}");
         client.DefaultRequestHeaders.Add("apikey", _supabaseKey);
 
-        var url = $"{_supabaseUrl}/storage/v1/object/{bucket}/{fileName}";
+        // 1. Sanitize the filename (Remove spaces and special characters)
+        var safeFileName = fileName
+            .Replace(" ", "_")
+            .Replace("ș", "s")
+            .Replace("ț", "t")
+            .Replace("ă", "a")
+            .Replace("î", "i")
+            .Replace("â", "a");
+        
+        // Remove any other non-alphanumeric characters except underscores, dots, and hyphens
+        safeFileName = System.Text.RegularExpressions.Regex.Replace(safeFileName, @"[^a-zA-Z0-9_\-\.]", "");
+
+        // 2. URL Encode for the request
+        var encodedFileName = Uri.EscapeDataString(safeFileName);
+        var url = $"{_supabaseUrl}/storage/v1/object/{bucket}/{encodedFileName}";
         
         using var requestContent = new StreamContent(content);
         requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
 
         var response = await client.PostAsync(url, requestContent);
         
-        if (!response.IsSuccessStatusCode)
+    if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync();
             throw new Exception($"Failed to upload to Supabase: {response.StatusCode} - {error}");
