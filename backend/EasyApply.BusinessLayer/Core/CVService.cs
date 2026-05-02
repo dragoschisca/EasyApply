@@ -3,6 +3,7 @@ using EasyApply.Domain.Entities;
 using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
+using Microsoft.Extensions.Configuration;
 using System.IO;
 
 namespace EasyApply.BusinessLayer.Core;
@@ -11,11 +12,17 @@ public class CVService : ICVService
 {
     private readonly ICVRepository _cvRepository;
     private readonly ICandidateRepository _candidateRepository;
+    private readonly ISupabaseStorageService _storageService;
+    private readonly string _cvBucket;
 
-    public CVService(ICVRepository cvRepository, ICandidateRepository candidateRepository)
+    public CVService(ICVRepository cvRepository, ICandidateRepository candidateRepository, ISupabaseStorageService storageService, IConfiguration configuration)
     {
         _cvRepository = cvRepository;
         _candidateRepository = candidateRepository;
+        _storageService = storageService;
+        _cvBucket = configuration["Supabase:CVBucket"] 
+                    ?? Environment.GetEnvironmentVariable("SUPABASE_CV_BUCKET") 
+                    ?? "cv-uploads";
     }
 
     public async Task<CVDto> GetByIdAsync(Guid id)
@@ -42,23 +49,16 @@ public class CVService : ICVService
         var candidate = await _candidateRepository.GetWithDetailsAsync(candidateId);
         if (candidate == null) throw new NotFoundException($"Candidate with ID {candidateId} not found.");
 
-        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "cvs");
-        if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
-
         var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
-        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            await fileStream.CopyToAsync(stream);
-        }
+        
+        await _storageService.UploadFileAsync(_cvBucket, uniqueFileName, fileStream);
 
         var cv = new CV
         {
             Id = Guid.NewGuid(),
             CandidateId = candidateId,
             FileName = fileName,
-            FilePath = $"/uploads/cvs/{uniqueFileName}",
+            FilePath = uniqueFileName, // Store the file name/path in bucket
             FileSize = (int)fileLength,
             IsPrimary = isPrimary,
             UploadedAt = DateTime.UtcNow

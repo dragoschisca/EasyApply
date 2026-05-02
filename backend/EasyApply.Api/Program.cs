@@ -1,5 +1,6 @@
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.BusinessLayer.Core;
+using EasyApply.BusinessLayer.Core.Storage;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.DataAccess.Data;
 using EasyApply.DataAccess.Repositories;
@@ -59,6 +60,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
+builder.Services.AddScoped<ISupabaseStorageService, SupabaseStorageService>();
 
 builder.Services.AddHttpClient();
 

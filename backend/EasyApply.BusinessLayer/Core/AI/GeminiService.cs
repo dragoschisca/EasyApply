@@ -22,9 +22,9 @@ public class GeminiService : IGeminiService
                   ?? string.Empty;
     }
 
-    public async Task<CompatibilityResultDto> GetCompatibilityResultAsync(string cvPath, string jobTitle, string jobDescription, string jobSkills)
+    public async Task<CompatibilityResultDto> GetCompatibilityResultAsync(Stream cvStream, string jobTitle, string jobDescription, string jobSkills)
     {
-        Console.WriteLine($"[AI-DEBUG] Starting analysis for CV: {cvPath}");
+        Console.WriteLine($"[AI-DEBUG] Starting analysis for CV Stream");
         Console.WriteLine($"[AI-DEBUG] API Key status: {(string.IsNullOrEmpty(_apiKey) ? "MISSING" : "PRESENT (Length: " + _apiKey.Length + ")")}");
         
         if (string.IsNullOrEmpty(_apiKey))
@@ -33,7 +33,7 @@ public class GeminiService : IGeminiService
             return new CompatibilityResultDto();
         }
 
-        string cvText = ExtractText(cvPath);
+        string cvText = ExtractText(cvStream);
         if (string.IsNullOrWhiteSpace(cvText))
         {
             Console.WriteLine("[AI-DEBUG] Extraction failed or returned empty text.");
@@ -194,36 +194,27 @@ public class GeminiService : IGeminiService
         return text.ToString();
     }
 
-    private string ExtractText(string pdfPath)
+    private string ExtractText(Stream pdfStream)
     {
         try 
         {
-            if (!File.Exists(pdfPath))
+            // Try with lenient parsing first
+            try 
             {
-                Console.WriteLine($"[AI-DEBUG] File does not exist at path: {pdfPath}");
-                return string.Empty;
+                return ExtractWithOption(pdfStream, new ParsingOptions { UseLenientParsing = true });
             }
-
-            using (var fs = new FileStream(pdfPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            catch (Exception ex)
             {
-                // Try with lenient parsing first
+                Console.WriteLine($"[AI-DEBUG] PdfPig lenient extraction failed: {ex.Message}. Trying default...");
+                // Fallback to default parsing
                 try 
                 {
-                    return ExtractWithOption(fs, new ParsingOptions { UseLenientParsing = true });
+                    return ExtractWithOption(pdfStream, new ParsingOptions { UseLenientParsing = false });
                 }
-                catch (Exception ex)
+                catch (Exception ex2)
                 {
-                    Console.WriteLine($"[AI-DEBUG] PdfPig lenient extraction failed: {ex.Message}. Trying default...");
-                    // Fallback to default parsing
-                    try 
-                    {
-                        return ExtractWithOption(fs, new ParsingOptions { UseLenientParsing = false });
-                    }
-                    catch (Exception ex2)
-                    {
-                        Console.WriteLine($"[AI-DEBUG] Default extraction also failed: {ex2.Message}");
-                        throw;
-                    }
+                    Console.WriteLine($"[AI-DEBUG] Default extraction also failed: {ex2.Message}");
+                    throw;
                 }
             }
         }

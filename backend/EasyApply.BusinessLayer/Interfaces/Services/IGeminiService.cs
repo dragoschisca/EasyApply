@@ -4,5 +4,5 @@ namespace EasyApply.BusinessLayer.Interfaces.Services;
 
 public interface IGeminiService
 {
-    Task<CompatibilityResultDto> GetCompatibilityResultAsync(string cvPath, string jobTitle, string jobDescription, string jobSkills);
+    Task<CompatibilityResultDto> GetCompatibilityResultAsync(Stream cvStream, string jobTitle, string jobDescription, string jobSkills);
 }

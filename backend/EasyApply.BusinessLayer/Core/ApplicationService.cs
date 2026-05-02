@@ -5,6 +5,7 @@ using EasyApply.Domain.Enums;
 using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace EasyApply.BusinessLayer.Core;
 
@@ -13,12 +14,23 @@ public class ApplicationService : IApplicationService
     private readonly IApplicationRepository _applicationRepository;
     private readonly IJobRepository _jobRepository;
     private readonly IGeminiService _geminiService;
+    private readonly ISupabaseStorageService _storageService;
+    private readonly string _cvBucket;
 
-    public ApplicationService(IApplicationRepository applicationRepository, IJobRepository jobRepository, IGeminiService geminiService)
+    public ApplicationService(
+        IApplicationRepository applicationRepository, 
+        IJobRepository jobRepository, 
+        IGeminiService geminiService,
+        ISupabaseStorageService storageService,
+        IConfiguration configuration)
     {
         _applicationRepository = applicationRepository;
         _jobRepository = jobRepository;
         _geminiService = geminiService;
+        _storageService = storageService;
+        _cvBucket = configuration["Supabase:CVBucket"] 
+                    ?? Environment.GetEnvironmentVariable("SUPABASE_CV_BUCKET") 
+                    ?? "cv-uploads";
     }
 
     public async Task<ApplicationDto> GetByIdAsync(Guid id)
@@ -106,12 +118,11 @@ public class ApplicationService : IApplicationService
         if (application.Job == null)
             throw new BusinessException("Application has no Job associated.");
 
-        // Convert virtual path (/uploads/cvs/...) to physical path
-        var filePath = application.CV.FilePath.TrimStart('/');
-        var fullCvPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
+        // Download CV from Supabase
+        using var cvStream = await _storageService.DownloadFileAsync(_cvBucket, application.CV.FilePath);
 
         var result = await _geminiService.GetCompatibilityResultAsync(
-            fullCvPath,
+            cvStream,
             application.Job.Title,
             application.Job.Description,
             application.Job.RequiredSkills ?? string.Empty);
