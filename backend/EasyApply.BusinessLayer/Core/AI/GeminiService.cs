@@ -14,7 +14,7 @@ public class GeminiService : IGeminiService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly string _apiKey;
-    private const string Model = "anthropic/claude-3.5-sonnet";
+    private const string Model = "openai/gpt-4o";
     public GeminiService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
