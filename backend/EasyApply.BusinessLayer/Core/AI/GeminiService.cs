@@ -14,8 +14,7 @@ public class GeminiService : IGeminiService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly string _apiKey;
-    private const string Model = "google/gemini-2.0-flash-001";
-
+    private const string Model = "anthropic/claude-3.5-sonnet";
     public GeminiService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
