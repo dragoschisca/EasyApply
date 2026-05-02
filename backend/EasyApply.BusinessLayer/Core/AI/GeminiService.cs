@@ -14,7 +14,8 @@ public class GeminiService : IGeminiService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly string _apiKey;
-    private const string Model = "openai/gpt-4o";
+    private const string Model = "google/gemini-2.0-flash-001";
+
     public GeminiService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;

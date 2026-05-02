@@ -128,6 +128,7 @@ public class ApplicationService : IApplicationService
             application.Job.RequiredSkills ?? string.Empty);
 
         application.CompatibilityScore = (decimal)result.Score;
+        application.ScoreDetails = System.Text.Json.JsonSerializer.Serialize(result);
         
         await _applicationRepository.UpdateAsync(application);
         await _applicationRepository.SaveChangesAsync();
@@ -135,7 +136,7 @@ public class ApplicationService : IApplicationService
         return result;
     }
 
-    private static ApplicationDto MapToDto(EasyApply.Domain.Entities.Application application)
+    private static ApplicationDto MapToDto(Application application)
     {
         return new ApplicationDto
         {
@@ -147,6 +148,7 @@ public class ApplicationService : IApplicationService
             CVFileName = application.CV?.FileName ?? string.Empty,
             Status = application.Status.ToString(),
             CompatibilityScore = (double?)(application.CompatibilityScore),
+            ScoreDetails = application.ScoreDetails,
             CreatedAt = application.AppliedAt,
             UpdatedAt = application.ReviewedAt ?? application.AppliedAt
         };
