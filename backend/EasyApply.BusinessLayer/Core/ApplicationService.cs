@@ -138,7 +138,7 @@ public class ApplicationService : IApplicationService
 
     private static ApplicationDto MapToDto(Application application)
     {
-        return new ApplicationDto
+        var dto = new ApplicationDto
         {
             Id = application.Id,
             CandidateId = application.CandidateId,
@@ -152,5 +152,20 @@ public class ApplicationService : IApplicationService
             CreatedAt = application.AppliedAt,
             UpdatedAt = application.ReviewedAt ?? application.AppliedAt
         };
+
+        if (!string.IsNullOrEmpty(application.ScoreDetails))
+    {
+        try 
+        {
+            var details = System.Text.Json.JsonSerializer.Deserialize<EasyApply.BusinessLayer.Structure.DTOs.AI.CompatibilityResultDto>(application.ScoreDetails);
+            if (details != null)
+            {
+                dto.Advantages = details.Advantages;
+                dto.Disadvantages = details.Disadvantages;
+            }
+        }
+        catch { /* Fallback */ }
+    }
+    return dto;
     }
 }

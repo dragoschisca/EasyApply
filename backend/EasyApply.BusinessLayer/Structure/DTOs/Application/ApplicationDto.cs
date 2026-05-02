@@ -10,6 +10,8 @@ public class ApplicationDto
     public string CVFileName { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public double? CompatibilityScore { get; set; }
+    public List<string> Advantages { get; set; } = new();
+    public List<string> Disadvantages { get; set; } = new();
     public string? ScoreDetails { get; set; }
     public string? CoverLetter { get; set; }
     public DateTime CreatedAt { get; set; }
