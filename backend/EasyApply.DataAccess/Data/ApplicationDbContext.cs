@@ -17,6 +17,8 @@ public class ApplicationDbContext: DbContext
     public DbSet<CV> CVs { get; set; }
     public DbSet<Application> Applications { get; set; }
     public DbSet<SavedJob> SavedJobs { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
