@@ -11,5 +11,5 @@ public interface IApplicationService
     Task<ApplicationDto> CreateAsync(Guid candidateId, CreateApplicationDto dto);
     Task<ApplicationDto> UpdateStatusAsync(Guid id, UpdateApplicationStatusDto dto);
     Task DeleteAsync(Guid id);
-    Task<CompatibilityResultDto> AnalyzeAsync(Guid id);
+    Task<ApplicationDto> AnalyzeAsync(Guid id);
 }
