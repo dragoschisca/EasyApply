@@ -7,6 +7,6 @@ public interface IJobRepository : IBaseRepository<Job>
     Task<IEnumerable<Job>> GetByCompanyIdAsync(Guid companyId, bool activeOnly = true);
     Task<(IEnumerable<Job> Jobs, int Total)> SearchAsync(
         string? keyword, string? location, string? category, string? employmentType,
-        string? experienceLevel, int? locationType, int page, int pageSize);
+        string? experienceLevel, int? locationType, decimal? minSalary, decimal? maxSalary, int page, int pageSize);
     Task IncrementViewCountAsync(Guid jobId);
 }
