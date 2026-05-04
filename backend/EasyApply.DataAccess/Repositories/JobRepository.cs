@@ -1,4 +1,3 @@
-
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.DataAccess.Data;
@@ -69,6 +68,8 @@ public class JobRepository : IJobRepository
         string? employmentType,
         string? experienceLevel,
         int? locationType,
+        decimal? minSalary,
+        decimal? maxSalary,
         int page,
         int pageSize)
     {
@@ -76,6 +77,27 @@ public class JobRepository : IJobRepository
             .Include(j => j.Company)
             .Where(j => j.IsActive)
             .AsQueryable();
+
+        if (minSalary.HasValue || maxSalary.HasValue)
+        {
+            // Intersection logic: !(SalaryMax < minSalary || SalaryMin > maxSalary)
+            // Simplified: (SalaryMax == null  SalaryMax >= minSalary) && (SalaryMin == null  SalaryMin <= maxSalary)
+            
+            if (minSalary.HasValue)
+            {
+                query = query.Where(j => !j.SalaryMax.HasValue || j.SalaryMax.Value >= minSalary.Value);
+            }
+            
+            if (maxSalary.HasValue)
+            {
+                query = query.Where(j => !j.SalaryMin.HasValue || j.SalaryMin.Value <= maxSalary.Value);
+            }
+        }
+
+        if (locationType.HasValue)
+        {
+            query = query.Where(j => (int)j.LocationType == locationType.Value);
+        }
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
@@ -100,15 +122,10 @@ public class JobRepository : IJobRepository
         if (!string.IsNullOrWhiteSpace(employmentType) &&
             Enum.TryParse<EasyApply.Domain.Enums.WorkTime>(employmentType, true, out var et))
             query = query.Where(j => j.EmploymentType == et);
-
         if (!string.IsNullOrWhiteSpace(experienceLevel) &&
             Enum.TryParse<EasyApply.Domain.Enums.ExperienceLevel>(experienceLevel, true, out var el))
             query = query.Where(j => j.ExperienceLevel == el);
 
-        if (locationType.HasValue)
-        {
-            query = query.Where(j => (int)j.LocationType == locationType.Value);
-        }
 
         var total = await query.CountAsync();
         var skip = (page - 1) * pageSize;
