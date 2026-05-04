@@ -74,6 +74,7 @@ public class CompanyService : ICompanyService
         if (dto.Description != null) company.Description = dto.Description;
         if (dto.LogoUrl != null) company.LogoUrl = dto.LogoUrl;
         if (dto.Location != null) company.Location = dto.Location;
+        if (dto.WhyJoinUs != null) company.WhyJoinUs = dto.WhyJoinUs;
         if (dto.SubscriptionTier.HasValue) company.SubscriptionTier = dto.SubscriptionTier.Value;
 
         company.UpdatedAt = DateTime.UtcNow;
@@ -106,6 +107,7 @@ public class CompanyService : ICompanyService
             Description = company.Description,
             LogoUrl = company.LogoUrl,
             Location = company.Location,
+            WhyJoinUs = company.WhyJoinUs,
             SubscriptionTier = company.SubscriptionTier,
             SubscriptionExpiresAt = company.SubscriptionExpiresAt,
             CreatedAt = company.CreatedAt
