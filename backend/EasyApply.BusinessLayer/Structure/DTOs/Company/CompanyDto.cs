@@ -1,4 +1,4 @@
-﻿using EasyApply.Domain.Enums;
+using EasyApply.Domain.Enums;
 
 namespace EasyApply.BusinessLayer.Structure.DTOs.Company;
 
