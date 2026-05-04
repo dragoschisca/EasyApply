@@ -33,9 +33,9 @@ public class JobService : IJobService
 
     public async Task<(IEnumerable<JobDto> Jobs, int Total)> SearchAsync(
         string? keyword, string? location, string? category, string? employmentType,
-        string? experienceLevel, int? locationType, int page, int pageSize)
+        string? experienceLevel, int? locationType, decimal? minSalary, decimal? maxSalary, int page, int pageSize)
     {
-        var result = await _jobRepository.SearchAsync(keyword, location, category, employmentType, experienceLevel, locationType, page, pageSize);
+        var result = await _jobRepository.SearchAsync(keyword, location, category, employmentType, experienceLevel, locationType, minSalary, maxSalary, page, pageSize);
         return (result.Jobs.Select(MapToDto), result.Total);
     }
 
@@ -97,7 +97,6 @@ public class JobService : IJobService
 
         return MapToDto(job);
     }
-
     public async Task DeleteAsync(Guid id)
     {
         var job = await _jobRepository.GetByIdAsync(id);
