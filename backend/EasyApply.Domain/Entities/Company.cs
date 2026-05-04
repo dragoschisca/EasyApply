@@ -13,6 +13,7 @@ public class Company
     public string? LogoUrl { get; set; }
     public string? Location { get; set; }
     public string? CompanyCulture { get; set; }
+    public string? WhyJoinUs { get; set; }
     public SubscriptionTier SubscriptionTier { get; set; } = SubscriptionTier.Free;
     public DateTime? SubscriptionExpiresAt { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
