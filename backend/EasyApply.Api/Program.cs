@@ -34,6 +34,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         npgsqlOptions.CommandTimeout(60);
     }));
 
+var jwtSecret =
+    Environment.GetEnvironmentVariable("Jwt__Secret")
+    ?? builder.Configuration["Jwt:Secret"];
+
+if (string.IsNullOrWhiteSpace(jwtSecret))
+{
+    throw new Exception("JWT secret is missing.");
+}
+
 #endregion
 
 #region SERVICES_SETUP
@@ -63,6 +72,14 @@ builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ISupabaseStorageService, SupabaseStorageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
+// Geocoding — named HttpClient with required Nominatim User-Agent header.
+builder.Services.AddHttpClient("Nominatim", client =>
+{
+    client.DefaultRequestHeaders.Add("User-Agent", "EasyApply/1.0 (job-portal)");
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
+builder.Services.AddScoped<IGeocodingService, GeocodingService>();
 
 builder.Services.AddHttpClient();
 
