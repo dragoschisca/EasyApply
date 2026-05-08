@@ -12,10 +12,9 @@ public class CompanyDto
     public string? Website { get; set; }
     public string? Description { get; set; }
     public string? LogoUrl { get; set; }
+    public string? WhyJoinUs { get; set; }
     public string? Location { get; set; }
-    public string Email { get; set; } = string.Empty;
     public SubscriptionTier SubscriptionTier { get; set; }
     public DateTime? SubscriptionExpiresAt { get; set; }
-    public int ActiveJobsCount { get; set; }
     public DateTime CreatedAt { get; set; }
 }

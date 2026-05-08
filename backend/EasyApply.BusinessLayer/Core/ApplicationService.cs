@@ -15,6 +15,7 @@ public class ApplicationService : IApplicationService
     private readonly IJobRepository _jobRepository;
     private readonly IGeminiService _geminiService;
     private readonly ISupabaseStorageService _storageService;
+    private readonly INotificationService _notificationService;
     private readonly string _cvBucket;
 
     public ApplicationService(
@@ -22,12 +23,14 @@ public class ApplicationService : IApplicationService
         IJobRepository jobRepository, 
         IGeminiService geminiService,
         ISupabaseStorageService storageService,
+        INotificationService notificationService,
         IConfiguration configuration)
     {
         _applicationRepository = applicationRepository;
         _jobRepository = jobRepository;
         _geminiService = geminiService;
         _storageService = storageService;
+        _notificationService = notificationService;
         _cvBucket = configuration["Supabase:CVBucket"] 
                     ?? Environment.GetEnvironmentVariable("SUPABASE_CV_BUCKET") 
                     ?? "cv-uploads";
@@ -71,6 +74,11 @@ public class ApplicationService : IApplicationService
         };
 
         await _applicationRepository.AddAsync(application);
+        
+        // Increment application count on job
+        job.ApplicationsCount++;
+        await _jobRepository.UpdateAsync(job);
+        
         await _applicationRepository.SaveChangesAsync();
 
         return MapToDto(application);
@@ -78,7 +86,7 @@ public class ApplicationService : IApplicationService
 
     public async Task<ApplicationDto> UpdateStatusAsync(Guid id, UpdateApplicationStatusDto dto)
     {
-        var application = await _applicationRepository.GetByIdAsync(id);
+        var application = await _applicationRepository.GetWithDetailsAsync(id);
         if (application == null) throw new NotFoundException($"Application with ID {id} not found.");
 
         if (Enum.TryParse<ApplicationStatus>(dto.Status, true, out var status))
@@ -95,6 +103,17 @@ public class ApplicationService : IApplicationService
         await _applicationRepository.UpdateAsync(application);
         await _applicationRepository.SaveChangesAsync();
 
+        // Notify candidate using their UserId (not CandidateId)
+        if (application.Candidate != null)
+        {
+            var jobTitle = application.Job?.Title ?? "your application";
+            await _notificationService.CreateNotificationAsync(
+                application.Candidate.UserId,
+                "Application Update",
+                $"Your application for '{jobTitle}' has been updated to {status}.",
+                $"/applications");
+        }
+
         return MapToDto(application);
     }
 
@@ -107,7 +126,7 @@ public class ApplicationService : IApplicationService
         await _applicationRepository.SaveChangesAsync();
     }
 
-    public async Task<CompatibilityResultDto> AnalyzeAsync(Guid id)
+    public async Task<ApplicationDto> AnalyzeAsync(Guid id)
     {
         var application = await _applicationRepository.GetWithDetailsAsync(id);
         if (application == null) throw new NotFoundException($"Application with ID {id} not found.");
@@ -133,7 +152,7 @@ public class ApplicationService : IApplicationService
         await _applicationRepository.UpdateAsync(application);
         await _applicationRepository.SaveChangesAsync();
 
-        return result;
+        return MapToDto(application);
     }
 
     private static ApplicationDto MapToDto(Application application)
@@ -142,10 +161,13 @@ public class ApplicationService : IApplicationService
         {
             Id = application.Id,
             CandidateId = application.CandidateId,
+            CandidateName = application.Candidate != null ? $"{application.Candidate.FirstName} {application.Candidate.LastName}" : "Anonymous",
+            CandidateEmail = application.Candidate?.User?.Email ?? string.Empty,
             JobId = application.JobId,
             JobTitle = application.Job?.Title ?? string.Empty,
             CompanyName = application.Job?.Company?.CompanyName ?? string.Empty,
             CVFileName = application.CV?.FileName ?? string.Empty,
+            CVPath = application.CV?.FilePath,
             Status = application.Status.ToString(),
             CompatibilityScore = (double?)(application.CompatibilityScore),
             ScoreDetails = application.ScoreDetails,
