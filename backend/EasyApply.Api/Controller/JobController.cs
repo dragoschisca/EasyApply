@@ -48,8 +48,23 @@ public class JobController : ControllerBase
         [FromQuery] int pageSize = 10)
     {
         var (jobs, total) = await _jobService.SearchAsync(
-            keyword, location, category, employmentType, experienceLevel, locationType, minSalary, maxSalary, page, pageSize);
+            keyword, location, category, employmentType, experienceLevel,
+            locationType, minSalary, maxSalary, page, pageSize);
         return Ok(new { Jobs = jobs, Total = total, Page = page, PageSize = pageSize });
+    }
+
+    // GET: api/job/nearby?lat=47.01&lng=28.86&radiusKm=10
+    [HttpGet("nearby")]
+    public async Task<IActionResult> GetNearby(
+        [FromQuery] double lat,
+        [FromQuery] double lng,
+        [FromQuery] double radiusKm = 10)
+    {
+        if (radiusKm <= 0 || radiusKm > 500)
+            return BadRequest("radiusKm must be between 1 and 500.");
+
+        var result = await _jobService.GetNearbyAsync(lat, lng, radiusKm);
+        return Ok(result);
     }
 
     // POST: api/job
