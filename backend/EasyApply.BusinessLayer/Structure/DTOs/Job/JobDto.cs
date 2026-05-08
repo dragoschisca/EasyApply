@@ -9,6 +9,7 @@ public class JobDto
     public string CompanyName { get; set; } = string.Empty;
     public string? CompanyLogoUrl { get; set; }
     public string Title { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Requirements { get; set; } = string.Empty;
     public List<string> RequiredSkills { get; set; } = new();
