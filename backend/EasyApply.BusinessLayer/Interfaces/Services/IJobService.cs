@@ -9,6 +9,7 @@ public interface IJobService
     Task<(IEnumerable<JobDto> Jobs, int Total)> SearchAsync(
         string? keyword, string? location, string? category, string? employmentType,
         string? experienceLevel, int? locationType, decimal? minSalary, decimal? maxSalary, int page, int pageSize);
+    Task<IEnumerable<JobDto>> GetNearbyAsync(double latitude, double longitude, double radiusKm);
     Task<JobDto> CreateAsync(CreateJobDto dto);
     Task<JobDto> UpdateAsync(Guid id, UpdateJobDto dto);
     Task DeleteAsync(Guid id);
