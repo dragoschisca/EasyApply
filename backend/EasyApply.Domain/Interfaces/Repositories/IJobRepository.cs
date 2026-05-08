@@ -9,4 +9,5 @@ public interface IJobRepository : IBaseRepository<Job>
         string? keyword, string? location, string? category, string? employmentType,
         string? experienceLevel, int? locationType, decimal? minSalary, decimal? maxSalary, int page, int pageSize);
     Task IncrementViewCountAsync(Guid jobId);
+    Task<IEnumerable<Job>> GetNearbyAsync(double latitude, double longitude, double radiusKm);
 }
