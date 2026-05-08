@@ -78,26 +78,14 @@ public class JobRepository : IJobRepository
             .Where(j => j.IsActive)
             .AsQueryable();
 
-        if (minSalary.HasValue || maxSalary.HasValue)
-        {
-            // Intersection logic: !(SalaryMax < minSalary || SalaryMin > maxSalary)
-            // Simplified: (SalaryMax == null  SalaryMax >= minSalary) && (SalaryMin == null  SalaryMin <= maxSalary)
-            
-            if (minSalary.HasValue)
-            {
-                query = query.Where(j => !j.SalaryMax.HasValue || j.SalaryMax.Value >= minSalary.Value);
-            }
-            
-            if (maxSalary.HasValue)
-            {
-                query = query.Where(j => !j.SalaryMin.HasValue || j.SalaryMin.Value <= maxSalary.Value);
-            }
-        }
+        if (minSalary.HasValue)
+            query = query.Where(j => !j.SalaryMax.HasValue || j.SalaryMax.Value >= minSalary.Value);
+
+        if (maxSalary.HasValue)
+            query = query.Where(j => !j.SalaryMin.HasValue || j.SalaryMin.Value <= maxSalary.Value);
 
         if (locationType.HasValue)
-        {
             query = query.Where(j => (int)j.LocationType == locationType.Value);
-        }
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
@@ -115,22 +103,48 @@ public class JobRepository : IJobRepository
         }
 
         if (!string.IsNullOrWhiteSpace(category))
-        {
             query = query.Where(j => j.Category == category);
-        }
 
         if (!string.IsNullOrWhiteSpace(employmentType) &&
             Enum.TryParse<EasyApply.Domain.Enums.WorkTime>(employmentType, true, out var et))
             query = query.Where(j => j.EmploymentType == et);
+
         if (!string.IsNullOrWhiteSpace(experienceLevel) &&
             Enum.TryParse<EasyApply.Domain.Enums.ExperienceLevel>(experienceLevel, true, out var el))
             query = query.Where(j => j.ExperienceLevel == el);
-
 
         var total = await query.CountAsync();
         var skip = (page - 1) * pageSize;
         var items = await query.OrderByDescending(j => j.CreatedAt).Skip(skip).Take(pageSize).ToListAsync();
         return (items, total);
+    }
+
+    /// <summary>
+    /// Returns active jobs within <paramref name="radiusKm"/> kilometres of the given point,
+    /// using the Haversine formula implemented in-process (no PostGIS required).
+    /// Only jobs that already have stored coordinates are considered.
+    /// </summary>
+    public async Task<IEnumerable<Job>> GetNearbyAsync(double latitude, double longitude, double radiusKm)
+    {
+        // Pull jobs that have coordinates — EF can't translate Math.Sin/Cos to SQL,
+        // so we filter the bounding box in SQL and apply the precise Haversine in memory.
+        double deltaLat = radiusKm / 111.0;           // ~1° lat ≈ 111 km
+        double deltaLon = radiusKm / (111.0 * Math.Cos(latitude * Math.PI / 180.0));
+
+        var candidates = await _context.Jobs
+            .Include(j => j.Company)
+            .Where(j =>
+                j.IsActive &&
+                j.Latitude.HasValue &&
+                j.Longitude.HasValue &&
+                j.Latitude.Value >= latitude - deltaLat &&
+                j.Latitude.Value <= latitude + deltaLat &&
+                j.Longitude.Value >= longitude - deltaLon &&
+                j.Longitude.Value <= longitude + deltaLon)
+            .ToListAsync();
+
+        // Precise Haversine filter in memory.
+        return candidates.Where(j => Haversine(latitude, longitude, j.Latitude!.Value, j.Longitude!.Value) <= radiusKm);
     }
 
     public async Task IncrementViewCountAsync(Guid jobId)
@@ -142,4 +156,20 @@ public class JobRepository : IJobRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    /// <summary>Returns the great-circle distance in kilometres between two coordinates.</summary>
+    private static double Haversine(double lat1, double lon1, double lat2, double lon2)
+    {
+        const double R = 6371.0; // Earth's mean radius in km
+        var dLat = ToRad(lat2 - lat1);
+        var dLon = ToRad(lon2 - lon1);
+        var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                Math.Cos(ToRad(lat1)) * Math.Cos(ToRad(lat2)) *
+                Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        return R * 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+    }
+
+    private static double ToRad(double deg) => deg * Math.PI / 180.0;
 }
