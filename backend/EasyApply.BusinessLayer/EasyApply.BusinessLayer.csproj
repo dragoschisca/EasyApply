@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EasyApply.Domain\EasyApply.Domain.csproj" />
+      <ProjectReference Include="..\EasyApply.DataAccess\EasyApply.DataAccess.csproj" />
     </ItemGroup>
 
     <ItemGroup>
