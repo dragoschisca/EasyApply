@@ -10,4 +10,6 @@ public interface ICompanyService
     Task<CompanyDto> CreateAsync(Guid userId, CreateCompanyDto dto);
     Task<CompanyDto> UpdateAsync(Guid userId, UpdateCompanyDto dto);
     Task DeleteAsync(Guid userId);
+    Task<CompanyStatisticsDto> GetStatisticsAsync(Guid companyId);
+    Task IncrementViewCountAsync(Guid id);
 }
