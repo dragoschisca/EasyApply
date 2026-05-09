@@ -18,7 +18,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EasyApply.Domain\EasyApply.Domain.csproj" />
-      <ProjectReference Include="..\EasyApply.BusinessLayer\EasyApply.BusinessLayer.csproj" />
     </ItemGroup>
 
 </Project>
