@@ -15,4 +15,5 @@ public interface IJobService
     Task DeleteAsync(Guid id);
     Task IncrementViewCountAsync(Guid id);
     Task<IEnumerable<JobDto>> GetRecommendationsAsync(Guid id, int count);
+    Task<SalaryBenchmarkResponse> GetSalaryBenchmarkAsync(SalaryBenchmarkRequest request);
 }
