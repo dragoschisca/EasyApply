@@ -175,6 +175,48 @@ public class JobService : IJobService
         return recommendations.Select(MapToDto);
     }
 
+    public async Task<SalaryBenchmarkResponse> GetSalaryBenchmarkAsync(SalaryBenchmarkRequest request)
+    {
+        var benchmarkData = await _jobRepository.GetSalaryBenchmarkDataAsync(request.Category, request.ExperienceLevel);
+        
+        var averages = benchmarkData
+            .Select(d => (d.Min ?? d.Max ?? 0) + (d.Max ?? d.Min ?? 0))
+            .Select(sum => sum / 2)
+            .ToList();
+
+        decimal marketAverage = averages.Any() ? averages.Average() : 0;
+        
+        // Use a default market average if no data is found to provide some value
+        if (marketAverage == 0) marketAverage = 25000; // Generic average for the region
+
+        decimal targetSalary = ((request.SalaryMin ?? request.SalaryMax ?? 0) + (request.SalaryMax ?? request.SalaryMin ?? 0)) / 2;
+        
+        if (targetSalary == 0)
+        {
+            return new SalaryBenchmarkResponse
+            {
+                MarketAverage = Math.Round(marketAverage, 0),
+                PercentageDifference = 0,
+                StatusLabel = "Negotiable"
+            };
+        }
+
+        double percentageDiff = (double)((targetSalary - marketAverage) / marketAverage) * 100;
+        
+        string statusLabel = "Fair Market Value";
+        if (percentageDiff > 15) statusLabel = "Highly Competitive";
+        else if (percentageDiff > 5) statusLabel = "Competitive";
+        else if (percentageDiff < -15) statusLabel = "Below Average";
+        else if (percentageDiff < -5) statusLabel = "Slightly Below Market";
+
+        return new SalaryBenchmarkResponse
+        {
+            MarketAverage = Math.Round(marketAverage, 0),
+            PercentageDifference = Math.Round(percentageDiff, 1),
+            StatusLabel = statusLabel
+        };
+    }
+
     private static JobDto MapToDto(Job job)
     {
         var dto = new JobDto
