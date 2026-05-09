@@ -20,6 +20,7 @@ public class CompanyController : ControllerBase
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await _companyService.GetByIdAsync(id);
+        await _companyService.IncrementViewCountAsync(id);
         return Ok(result);
     }
 
@@ -63,5 +64,14 @@ public class CompanyController : ControllerBase
     {
         await _companyService.DeleteAsync(userId);
         return NoContent();
+    }
+
+    // GET: api/company/{companyId}/analytics
+    [HttpGet("{companyId:guid}/analytics")]
+    public async Task<IActionResult> GetAnalytics(Guid companyId, [FromQuery] string timeframe = "weekly")
+    {
+        // For now, only weekly is supported as per requirements
+        var result = await _companyService.GetStatisticsAsync(companyId);
+        return Ok(result);
     }
 }
