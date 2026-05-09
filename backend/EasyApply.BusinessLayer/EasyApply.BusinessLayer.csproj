@@ -22,4 +22,8 @@
 <PackageReference Include="itext7" Version="8.0.5" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Structure\DTOs\Notification\" />
+    </ItemGroup>
+
 </Project>
