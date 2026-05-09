@@ -3,16 +3,19 @@ using EasyApply.Domain.Entities;
 using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace EasyApply.BusinessLayer.Core;
 
 public class CompanyService : ICompanyService
 {
     private readonly ICompanyRepository _companyRepository;
+    private readonly EasyApply.DataAccess.Data.ApplicationDbContext _context;
 
-    public CompanyService(ICompanyRepository companyRepository)
+    public CompanyService(ICompanyRepository companyRepository, EasyApply.DataAccess.Data.ApplicationDbContext context)
     {
         _companyRepository = companyRepository;
+        _context = context;
     }
 
     public async Task<CompanyDto> GetByIdAsync(Guid id)
@@ -85,6 +88,69 @@ public class CompanyService : ICompanyService
         return MapToDto(company);
     }
 
+    public async Task<CompanyStatisticsDto> GetStatisticsAsync(Guid companyId)
+    {
+        var last7Days = DateTime.UtcNow.Date.AddDays(-6);
+
+        // 1. Total Applicants
+        var totalApplicants = await _context.Applications
+            .CountAsync(a => a.Job.CompanyId == companyId);
+
+        // 2. Weekly Profile Views (Grouped by Day)
+        var profileViewsRaw = await _context.CompanyProfileViews
+            .Where(v => v.CompanyId == companyId && v.ViewedAt >= last7Days)
+            .GroupBy(v => v.ViewedAt.Date)
+            .Select(g => new { Date = g.Key, Count = g.Count() })
+            .ToListAsync();
+
+        // Fill in missing days with 0 views
+        var weeklyProfileViews = Enumerable.Range(0, 7)
+            .Select(offset => last7Days.AddDays(offset))
+            .Select(date => new DailyViewDto
+            {
+                Date = date,
+                Views = profileViewsRaw.FirstOrDefault(p => p.Date == date)?.Count ?? 0
+            })
+            .ToList();
+
+        // 3. Top 5 Most Popular Jobs
+        // Ranked by a combination of view counts and conversion rate
+        // We use a weighted score: (Views * 0.2) + (ConversionRate * 100 * 0.8)
+        var topJobs = await _context.Jobs
+            .Where(j => j.CompanyId == companyId)
+            .Select(j => new
+            {
+                j.Id,
+                j.Title,
+                j.ViewsCount,
+                j.ApplicationsCount,
+                ConversionRate = j.ViewsCount > 0 ? (double)j.ApplicationsCount / j.ViewsCount : 0
+            })
+            .ToListAsync();
+
+        var rankedJobs = topJobs
+            .Select(j => new JobPopularityDto
+            {
+                JobId = j.Id,
+                Title = j.Title,
+                ViewsCount = j.ViewsCount,
+                ApplicationsCount = j.ApplicationsCount,
+                ConversionRate = j.ConversionRate,
+                // Score calculation for ranking
+                // Score = Views + (Conversion * 100)
+            })
+            .OrderByDescending(j => j.ViewsCount + (j.ConversionRate * 1000)) // Heuristic: high weight on conversion
+            .Take(5)
+            .ToList();
+
+        return new CompanyStatisticsDto
+        {
+            TotalApplicants = totalApplicants,
+            WeeklyProfileViews = weeklyProfileViews,
+            TopJobs = rankedJobs
+        };
+    }
+
     public async Task DeleteAsync(Guid userId)
     {
         var company = await _companyRepository.GetByUserIdAsync(userId);
@@ -92,6 +158,17 @@ public class CompanyService : ICompanyService
 
         await _companyRepository.DeleteAsync(company);
         await _companyRepository.SaveChangesAsync();
+    }
+
+    public async Task IncrementViewCountAsync(Guid id)
+    {
+        _context.CompanyProfileViews.Add(new CompanyProfileView
+        {
+            Id = Guid.NewGuid(),
+            CompanyId = id,
+            ViewedAt = DateTime.UtcNow
+        });
+        await _context.SaveChangesAsync();
     }
 
     private static CompanyDto MapToDto(Company company)
