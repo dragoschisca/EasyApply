@@ -12,15 +12,18 @@ public class JobService : IJobService
     private readonly IJobRepository _jobRepository;
     private readonly ICompanyRepository _companyRepository;
     private readonly IGeocodingService _geocodingService;
+    private readonly EasyApply.DataAccess.Data.ApplicationDbContext _context;
 
     public JobService(
         IJobRepository jobRepository,
         ICompanyRepository companyRepository,
-        IGeocodingService geocodingService)
+        IGeocodingService geocodingService,
+        EasyApply.DataAccess.Data.ApplicationDbContext context)
     {
         _jobRepository = jobRepository;
         _companyRepository = companyRepository;
         _geocodingService = geocodingService;
+        _context = context;
     }
 
     public async Task<JobDto> GetByIdAsync(Guid id)
@@ -160,6 +163,15 @@ public class JobService : IJobService
     public async Task IncrementViewCountAsync(Guid id)
     {
         await _jobRepository.IncrementViewCountAsync(id);
+        
+        // Record detailed view for analytics
+        _context.JobViews.Add(new JobView
+        {
+            Id = Guid.NewGuid(),
+            JobId = id,
+            ViewedAt = DateTime.UtcNow
+        });
+        await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<JobDto>> GetRecommendationsAsync(Guid id, int count)
