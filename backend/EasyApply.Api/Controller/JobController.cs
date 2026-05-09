@@ -106,4 +106,12 @@ public class JobController : ControllerBase
         var result = await _jobService.GetRecommendationsAsync(id, count);
         return Ok(result);
     }
+
+    // GET: api/job/benchmark-salary?category=...&experienceLevel=...&salaryMin=...&salaryMax=...
+    [HttpGet("benchmark-salary")]
+    public async Task<IActionResult> GetSalaryBenchmark([FromQuery] SalaryBenchmarkRequest request)
+    {
+        var result = await _jobService.GetSalaryBenchmarkAsync(request);
+        return Ok(result);
+    }
 }
