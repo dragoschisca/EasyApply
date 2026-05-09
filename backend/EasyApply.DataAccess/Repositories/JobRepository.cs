@@ -171,5 +171,22 @@ public class JobRepository : IJobRepository
         return R * 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
     }
 
+    public async Task<IEnumerable<(decimal? Min, decimal? Max)>> GetSalaryBenchmarkDataAsync(string category, string experienceLevel)
+    {
+        var query = _context.Jobs.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(category))
+            query = query.Where(j => j.Category == category);
+
+        if (!string.IsNullOrWhiteSpace(experienceLevel) &&
+            Enum.TryParse<EasyApply.Domain.Enums.ExperienceLevel>(experienceLevel, true, out var el))
+            query = query.Where(j => j.ExperienceLevel == el);
+
+        return await query
+            .Where(j => j.SalaryMin.HasValue || j.SalaryMax.HasValue)
+            .Select(j => new ValueTuple<decimal?, decimal?>(j.SalaryMin, j.SalaryMax))
+            .ToListAsync();
+    }
+
     private static double ToRad(double deg) => deg * Math.PI / 180.0;
 }
