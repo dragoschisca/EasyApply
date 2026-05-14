@@ -113,35 +113,20 @@ public class CompanyService : ICompanyService
             })
             .ToList();
 
-        // 3. Top 5 Most Popular Jobs
-        // Ranked by a combination of view counts and conversion rate
-        // We use a weighted score: (Views * 0.2) + (ConversionRate * 100 * 0.8)
-        var topJobs = await _context.Jobs
+        // 3. Top 5 Most Popular Jobs (Ranked in DB)
+        var rankedJobs = await _context.Jobs
             .Where(j => j.CompanyId == companyId)
-            .Select(j => new
-            {
-                j.Id,
-                j.Title,
-                j.ViewsCount,
-                j.ApplicationsCount,
-                ConversionRate = j.ViewsCount > 0 ? (double)j.ApplicationsCount / j.ViewsCount : 0
-            })
-            .ToListAsync();
-
-        var rankedJobs = topJobs
+            .OrderByDescending(j => j.ViewsCount + (j.ViewsCount > 0 ? (double)j.ApplicationsCount / j.ViewsCount * 1000 : 0))
+            .Take(5)
             .Select(j => new JobPopularityDto
             {
                 JobId = j.Id,
                 Title = j.Title,
                 ViewsCount = j.ViewsCount,
                 ApplicationsCount = j.ApplicationsCount,
-                ConversionRate = j.ConversionRate,
-                // Score calculation for ranking
-                // Score = Views + (Conversion * 100)
+                ConversionRate = j.ViewsCount > 0 ? (double)j.ApplicationsCount / j.ViewsCount : 0
             })
-            .OrderByDescending(j => j.ViewsCount + (j.ConversionRate * 1000)) // Heuristic: high weight on conversion
-            .Take(5)
-            .ToList();
+            .ToListAsync();
 
         return new CompanyStatisticsDto
         {
