@@ -18,17 +18,20 @@ public class AuthService : IAuthService
     private readonly ICandidateRepository _candidateRepository;
     private readonly ICompanyRepository _companyRepository;
     private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
 
     public AuthService(
         IUserRepository userRepository,
         ICandidateRepository candidateRepository,
         ICompanyRepository companyRepository,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IEmailService emailService)
     {
         _userRepository = userRepository;
         _candidateRepository = candidateRepository;
         _companyRepository = companyRepository;
         _configuration = configuration;
+        _emailService = emailService;
     }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
@@ -79,6 +82,10 @@ public class AuthService : IAuthService
         }
 
         await _userRepository.SaveChangesAsync();
+
+        // Send Welcome Email
+        var userName = request.UserType == UserType.Company ? request.CompanyName : request.FirstName;
+        _ = _emailService.SendWelcomeEmailAsync(request.Email, userName ?? "User");
 
         var token = GenerateJwtToken(user);
 
