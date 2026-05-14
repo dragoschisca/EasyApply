@@ -162,7 +162,8 @@ public class JobService : IJobService
 
     public async Task IncrementViewCountAsync(Guid id)
     {
-        await _jobRepository.IncrementViewCountAsync(id);
+        // Consolidate both operations into one transaction
+        await _jobRepository.IncrementViewCountAsync(id, saveChanges: false);
         
         // Record detailed view for analytics
         _context.JobViews.Add(new JobView
@@ -171,19 +172,14 @@ public class JobService : IJobService
             JobId = id,
             ViewedAt = DateTime.UtcNow
         });
+        
         await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<JobDto>> GetRecommendationsAsync(Guid id, int count)
     {
-        var job = await _jobRepository.GetByIdAsync(id);
-        if (job == null) return Enumerable.Empty<JobDto>();
-
-        var allJobs = await _jobRepository.GetAllAsync();
-        var recommendations = allJobs
-            .Where(j => j.Id != id && j.IsActive && j.CompanyId == job.CompanyId)
-            .Take(count);
-
+        // SQL-level filtering instead of in-memory
+        var recommendations = await _jobRepository.GetRecommendationsAsync(id, count);
         return recommendations.Select(MapToDto);
     }
 
