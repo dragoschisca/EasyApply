@@ -89,17 +89,17 @@ public class JobRepository : IJobRepository
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
-            var lowerKeyword = keyword.ToLower();
+            var lowerKeyword = $"%{keyword.ToLower()}%";
             query = query.Where(j =>
-                j.Title.ToLower().Contains(lowerKeyword) ||
-                j.Description.ToLower().Contains(lowerKeyword) ||
-                j.Requirements.ToLower().Contains(lowerKeyword));
+                EF.Functions.ILike(j.Title, lowerKeyword) ||
+                EF.Functions.ILike(j.Description, lowerKeyword) ||
+                EF.Functions.ILike(j.Requirements, lowerKeyword));
         }
 
         if (!string.IsNullOrWhiteSpace(location))
         {
-            var lowerLocation = location.ToLower();
-            query = query.Where(j => j.Location != null && j.Location.ToLower().Contains(lowerLocation));
+            var lowerLocation = $"%{location.ToLower()}%";
+            query = query.Where(j => j.Location != null && EF.Functions.ILike(j.Location, lowerLocation));
         }
 
         if (!string.IsNullOrWhiteSpace(category))
@@ -117,6 +117,20 @@ public class JobRepository : IJobRepository
         var skip = (page - 1) * pageSize;
         var items = await query.OrderByDescending(j => j.CreatedAt).Skip(skip).Take(pageSize).ToListAsync();
         return (items, total);
+    }
+
+    public async Task<IEnumerable<Job>> GetRecommendationsAsync(Guid jobId, int count)
+    {
+        var sourceJob = await _context.Jobs.AsNoTracking().FirstOrDefaultAsync(j => j.Id == jobId);
+        if (sourceJob == null) return Enumerable.Empty<Job>();
+
+        return await _context.Jobs
+            .Include(j => j.Company)
+            .Where(j => j.Id != jobId && j.IsActive && 
+                       (j.CompanyId == sourceJob.CompanyId || j.Category == sourceJob.Category))
+            .OrderByDescending(j => j.CreatedAt)
+            .Take(count)
+            .ToListAsync();
     }
 
     /// <summary>
@@ -147,13 +161,13 @@ public class JobRepository : IJobRepository
         return candidates.Where(j => Haversine(latitude, longitude, j.Latitude!.Value, j.Longitude!.Value) <= radiusKm);
     }
 
-    public async Task IncrementViewCountAsync(Guid jobId)
+    public async Task IncrementViewCountAsync(Guid jobId, bool saveChanges = true)
     {
         var job = await _context.Jobs.FindAsync(jobId);
         if (job != null)
         {
             job.ViewsCount++;
-            await _context.SaveChangesAsync();
+            if (saveChanges) await _context.SaveChangesAsync();
         }
     }
 
