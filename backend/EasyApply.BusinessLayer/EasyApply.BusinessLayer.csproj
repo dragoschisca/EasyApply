@@ -13,6 +13,9 @@
 
     <ItemGroup>
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+      <PackageReference Include="FluentEmail.Core" Version="3.0.2" />
+      <PackageReference Include="FluentEmail.MailKit" Version="3.0.2" />
+      <PackageReference Include="FluentEmail.Razor" Version="3.0.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +28,12 @@
 
     <ItemGroup>
       <Folder Include="Structure\DTOs\Notification\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Templates\Emails\*.cshtml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
