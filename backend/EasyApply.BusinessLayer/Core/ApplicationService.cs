@@ -13,24 +13,30 @@ public class ApplicationService : IApplicationService
 {
     private readonly IApplicationRepository _applicationRepository;
     private readonly IJobRepository _jobRepository;
+    private readonly ICandidateRepository _candidateRepository;
     private readonly IGeminiService _geminiService;
     private readonly ISupabaseStorageService _storageService;
     private readonly INotificationService _notificationService;
+    private readonly IEmailService _emailService;
     private readonly string _cvBucket;
 
     public ApplicationService(
         IApplicationRepository applicationRepository, 
         IJobRepository jobRepository, 
+        ICandidateRepository candidateRepository,
         IGeminiService geminiService,
         ISupabaseStorageService storageService,
         INotificationService notificationService,
+        IEmailService emailService,
         IConfiguration configuration)
     {
         _applicationRepository = applicationRepository;
         _jobRepository = jobRepository;
+        _candidateRepository = candidateRepository;
         _geminiService = geminiService;
         _storageService = storageService;
         _notificationService = notificationService;
+        _emailService = emailService;
         _cvBucket = configuration["Supabase:CVBucket"] 
                     ?? Environment.GetEnvironmentVariable("SUPABASE_CV_BUCKET") 
                     ?? "cv-uploads";
@@ -80,6 +86,16 @@ public class ApplicationService : IApplicationService
         await _jobRepository.UpdateAsync(job);
         
         await _applicationRepository.SaveChangesAsync();
+
+        // Send Application Received Email
+        var candidate = await _candidateRepository.GetWithDetailsAsync(candidateId);
+        if (candidate != null && candidate.User != null)
+        {
+            _ = _emailService.SendApplicationReceivedEmailAsync(
+                candidate.User.Email, 
+                $"{candidate.FirstName} {candidate.LastName}", 
+                job.Title);
+        }
 
         return MapToDto(application);
     }
