@@ -72,6 +72,28 @@ builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ISupabaseStorageService, SupabaseStorageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// FluentEmail Setup NEED CHANGES
+// var smtpHost = Environment.GetEnvironmentVariable("SMTP_HOST") ?? "localhost";
+// var smtpPort = int.Parse(Environment.GetEnvironmentVariable("SMTP_PORT") ?? "25");
+// var smtpUser = Environment.GetEnvironmentVariable("SMTP_USER");
+// var smtpPass = Environment.GetEnvironmentVariable("SMTP_PASS");
+// var fromEmail = Environment.GetEnvironmentVariable("SMTP_FROM_EMAIL") ?? "no-reply@easyapply.com";
+// var fromName = Environment.GetEnvironmentVariable("SMTP_FROM_NAME") ?? "EasyApply";
+//
+// builder.Services
+//     .AddFluentEmail(fromEmail, fromName)
+//     .AddRazorRenderer()
+//     .AddMailKitSender(new FluentEmail.Mailkit.Smtp.SmtpClientOptions
+//     {
+//         Server = smtpHost,
+//         Port = smtpPort,
+//         User = smtpUser,
+//         Password = smtpPass,
+//         UseSsl = false, // Set to true if using SSL/TLS port like 465
+//         RequiresAuthentication = !string.IsNullOrEmpty(smtpUser)
+//     });
 
 // Geocoding — named HttpClient with required Nominatim User-Agent header.
 builder.Services.AddHttpClient("Nominatim", client =>
