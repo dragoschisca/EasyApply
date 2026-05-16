@@ -19,14 +19,16 @@ public class CVRepository : ICVRepository
         await _context.CVs.AddAsync(entity);
     }
 
-    public async Task UpdateAsync(CV entity)
+    public Task UpdateAsync(CV entity)
     {
         _context.CVs.Update(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(CV entity)
+    public Task DeleteAsync(CV entity)
     {
         _context.CVs.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<CV?> GetByIdAsync(Guid id)
