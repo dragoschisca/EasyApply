@@ -3,6 +3,8 @@ using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 
+namespace EasyApply.DataAccess.Repositories;
+
 public class CandidateRepository : ICandidateRepository
 {
     private readonly ApplicationDbContext _context;
@@ -17,14 +19,16 @@ public class CandidateRepository : ICandidateRepository
         await _context.Candidates.AddAsync(entity);
     }
 
-    public async Task UpdateAsync(Candidate entity)
+    public Task UpdateAsync(Candidate entity)
     {
         _context.Candidates.Update(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(Candidate entity)
+    public Task DeleteAsync(Candidate entity)
     {
         _context.Candidates.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<Candidate?> GetByIdAsync(Guid id)
@@ -56,7 +60,9 @@ public class CandidateRepository : ICandidateRepository
 
     public async Task<Candidate?> GetWithDetailsAsync(Guid id)
     {
-        return await _context.Candidates.FirstOrDefaultAsync(c => c.Id == id);
+        return await _context.Candidates
+            .Include(c => c.User)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<IEnumerable<Candidate>> SearchAsync(string term)
