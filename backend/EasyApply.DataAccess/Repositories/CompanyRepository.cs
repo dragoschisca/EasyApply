@@ -19,14 +19,16 @@ public class CompanyRepository : ICompanyRepository
         await _context.Companies.AddAsync(entity);
     }
 
-    public async Task UpdateAsync(Company entity)
+    public Task UpdateAsync(Company entity)
     {
         _context.Companies.Update(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(Company entity)
+    public Task DeleteAsync(Company entity)
     {
         _context.Companies.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<Company?> GetByIdAsync(Guid id)
@@ -62,5 +64,17 @@ public class CompanyRepository : ICompanyRepository
         return await _context.Companies
             .Include(c => c.Jobs)
             .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task AddProfileViewAsync(CompanyProfileView view)
+    {
+        await _context.CompanyProfileViews.AddAsync(view);
+    }
+
+    public async Task<IEnumerable<CompanyProfileView>> GetProfileViewsAsync(Guid companyId, DateTime since)
+    {
+        return await _context.CompanyProfileViews
+            .Where(v => v.CompanyId == companyId && v.ViewedAt >= since)
+            .ToListAsync();
     }
 }
