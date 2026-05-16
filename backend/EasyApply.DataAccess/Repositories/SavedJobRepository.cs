@@ -19,14 +19,16 @@ public class SavedJobRepository : ISavedJobRepository
         await _context.SavedJobs.AddAsync(entity);
     }
 
-    public async Task UpdateAsync(SavedJob entity)
+    public Task UpdateAsync(SavedJob entity)
     {
         _context.SavedJobs.Update(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(SavedJob entity)
+    public Task DeleteAsync(SavedJob entity)
     {
         _context.SavedJobs.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<SavedJob?> GetByIdAsync(Guid id)
