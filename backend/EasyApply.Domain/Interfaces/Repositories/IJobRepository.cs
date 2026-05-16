@@ -12,4 +12,6 @@ public interface IJobRepository : IBaseRepository<Job>
     Task<IEnumerable<Job>> GetNearbyAsync(double latitude, double longitude, double radiusKm);
     Task<IEnumerable<Job>> GetRecommendationsAsync(Guid jobId, int count);
     Task<IEnumerable<(decimal? Min, decimal? Max)>> GetSalaryBenchmarkDataAsync(string category, string experienceLevel);
+    Task AddJobViewAsync(JobView view);
+    Task<IEnumerable<Job>> GetTopJobsByCompanyIdAsync(Guid companyId, int count);
 }
