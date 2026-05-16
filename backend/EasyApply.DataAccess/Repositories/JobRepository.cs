@@ -19,14 +19,16 @@ public class JobRepository : IJobRepository
         await _context.Jobs.AddAsync(entity);
     }
 
-    public async Task UpdateAsync(Job entity)
+    public Task UpdateAsync(Job entity)
     {
         _context.Jobs.Update(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(Job entity)
+    public Task DeleteAsync(Job entity)
     {
         _context.Jobs.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<Job?> GetByIdAsync(Guid id)
@@ -55,7 +57,7 @@ public class JobRepository : IJobRepository
 
     public async Task<IEnumerable<Job>> GetByCompanyIdAsync(Guid companyId, bool activeOnly = true)
     {
-        var query = _context.Jobs.Where(j => j.CompanyId == companyId);
+        var query = _context.Jobs.Include(j => j.Company).Where(j => j.CompanyId == companyId);
         if (activeOnly)
             query = query.Where(j => j.IsActive);
         return await query.ToListAsync();
@@ -133,16 +135,9 @@ public class JobRepository : IJobRepository
             .ToListAsync();
     }
 
-    /// <summary>
-    /// Returns active jobs within <paramref name="radiusKm"/> kilometres of the given point,
-    /// using the Haversine formula implemented in-process (no PostGIS required).
-    /// Only jobs that already have stored coordinates are considered.
-    /// </summary>
     public async Task<IEnumerable<Job>> GetNearbyAsync(double latitude, double longitude, double radiusKm)
     {
-        // Pull jobs that have coordinates — EF can't translate Math.Sin/Cos to SQL,
-        // so we filter the bounding box in SQL and apply the precise Haversine in memory.
-        double deltaLat = radiusKm / 111.0;           // ~1° lat ≈ 111 km
+        double deltaLat = radiusKm / 111.0;
         double deltaLon = radiusKm / (111.0 * Math.Cos(latitude * Math.PI / 180.0));
 
         var candidates = await _context.Jobs
@@ -157,7 +152,6 @@ public class JobRepository : IJobRepository
                 j.Longitude.Value <= longitude + deltaLon)
             .ToListAsync();
 
-        // Precise Haversine filter in memory.
         return candidates.Where(j => Haversine(latitude, longitude, j.Latitude!.Value, j.Longitude!.Value) <= radiusKm);
     }
 
@@ -171,12 +165,23 @@ public class JobRepository : IJobRepository
         }
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    public async Task AddJobViewAsync(JobView view)
+    {
+        await _context.JobViews.AddAsync(view);
+    }
 
-    /// <summary>Returns the great-circle distance in kilometres between two coordinates.</summary>
+    public async Task<IEnumerable<Job>> GetTopJobsByCompanyIdAsync(Guid companyId, int count)
+    {
+        return await _context.Jobs
+            .Where(j => j.CompanyId == companyId)
+            .OrderByDescending(j => j.ViewsCount + (j.ViewsCount > 0 ? (double)j.ApplicationsCount / j.ViewsCount * 1000 : 0))
+            .Take(count)
+            .ToListAsync();
+    }
+
     private static double Haversine(double lat1, double lon1, double lat2, double lon2)
     {
-        const double R = 6371.0; // Earth's mean radius in km
+        const double R = 6371.0;
         var dLat = ToRad(lat2 - lat1);
         var dLon = ToRad(lon2 - lon1);
         var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
