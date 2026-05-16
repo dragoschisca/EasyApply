@@ -19,14 +19,16 @@ public class UserRepository : IUserRepository
         await _context.Users.AddAsync(entity);
     }
 
-    public async Task UpdateAsync(User entity)
+    public Task UpdateAsync(User entity)
     {
         _context.Users.Update(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(User entity)
+    public Task DeleteAsync(User entity)
     {
         _context.Users.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<User?> GetByIdAsync(Guid id)
@@ -56,10 +58,4 @@ public class UserRepository : IUserRepository
         return await _context.Users
             .FirstOrDefaultAsync(u => u.Email == email);
     }
-
-    // public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
-    //  {
-    //      return await _context.Users
-    //          .FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
-    //  }
 }
