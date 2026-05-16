@@ -19,14 +19,16 @@ public class NotificationRepository : INotificationRepository
         await _context.Notifications.AddAsync(entity);
     }
 
-    public async Task UpdateAsync(Notification entity)
+    public Task UpdateAsync(Notification entity)
     {
         _context.Notifications.Update(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(Notification entity)
+    public Task DeleteAsync(Notification entity)
     {
         _context.Notifications.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<Notification?> GetByIdAsync(Guid id)
