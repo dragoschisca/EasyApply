@@ -19,14 +19,16 @@ public class ApplicationRepository : IApplicationRepository
         await _context.Applications.AddAsync(entity);
     }
 
-    public async Task UpdateAsync(Application entity)
+    public Task UpdateAsync(Application entity)
     {
         _context.Applications.Update(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(Application entity)
+    public Task DeleteAsync(Application entity)
     {
         _context.Applications.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<Application?> GetByIdAsync(Guid id)
@@ -84,5 +86,11 @@ public class ApplicationRepository : IApplicationRepository
     {
         return await _context.Applications
             .AnyAsync(a => a.CandidateId == candidateId && a.JobId == jobId);
+    }
+
+    public async Task<int> GetCountByCompanyIdAsync(Guid companyId)
+    {
+        return await _context.Applications
+            .CountAsync(a => a.Job.CompanyId == companyId);
     }
 }
