@@ -84,7 +84,6 @@ public class CVService : ICVService
         if (!string.IsNullOrWhiteSpace(dto.FileName)) cv.FileName = dto.FileName;
         if (!string.IsNullOrWhiteSpace(dto.FilePath)) cv.FilePath = dto.FilePath;
         if (dto.FileSize.HasValue) cv.FileSize = dto.FileSize.Value;
-        if (dto.ParsedContent != null) cv.ParsedContent = dto.ParsedContent;
         if (dto.Skills != null) cv.Skills = dto.Skills;
         if (dto.Experience != null) cv.Experience = dto.Experience;
         if (dto.Education != null) cv.Education = dto.Education;
@@ -127,7 +126,6 @@ public class CVService : ICVService
             FileName = cv.FileName,
             FilePath = cv.FilePath,
             FileSize = cv.FileSize,
-            ParsedContent = cv.ParsedContent,
             Skills = cv.Skills,
             Experience = cv.Experience,
             Education = cv.Education,
