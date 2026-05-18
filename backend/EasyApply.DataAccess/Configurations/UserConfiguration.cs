@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using EasyApply.Domain.Entities;
 
@@ -38,10 +38,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.IsActive)
             .HasColumnName("is_active")
             .HasDefaultValue(true);
-
-        builder.Property(u => u.EmailVerified)
-            .HasColumnName("email_verified")
-            .HasDefaultValue(false);
 
         builder.Property(u => u.CreatedAt)
             .HasColumnName("created_at")
