@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace EasyApply.BusinessLayer.Structure.DTOs.CV;
 
@@ -11,7 +11,6 @@ public class CVDto
     public int FileSize { get; set; }
     public bool IsPrimary { get; set; }
     public bool IsParsed { get; set; }
-    public string? ParsedContent { get; set; }
     public string? Skills { get; set; }
     public string? Experience { get; set; }
     public string? Education { get; set; }
