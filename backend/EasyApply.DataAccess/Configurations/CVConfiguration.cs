@@ -1,4 +1,4 @@
-﻿using EasyApply.Domain.Entities;
+using EasyApply.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -32,10 +32,6 @@ public class CVConfiguration : IEntityTypeConfiguration<CV>
 
         builder.Property(cv => cv.FileSize)
             .HasColumnName("file_size");
-
-        builder.Property(cv => cv.ParsedContent)
-            .HasColumnName("parsed_content")
-            .HasColumnType("text");
 
         builder.Property(cv => cv.Skills)
             .HasColumnName("skills")
