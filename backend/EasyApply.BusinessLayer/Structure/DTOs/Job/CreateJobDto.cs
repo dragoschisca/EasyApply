@@ -15,7 +15,6 @@ public class CreateJobDto
     public LocationType LocationType { get; set; }
     public string? Location { get; set; }
     public string? Address { get; set; }
-    public string? CompanyCulture { get; set; }
     public decimal? SalaryMin { get; set; }
     public decimal? SalaryMax { get; set; }
     public bool IsRemote { get; set; }
