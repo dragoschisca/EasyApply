@@ -29,5 +29,4 @@ public class JobDto
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public LocationType LocationType { get; set; }
-    public string? CompanyCulture { get; set; }
 }
