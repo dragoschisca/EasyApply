@@ -39,7 +39,7 @@ public class UserService : IUserService
     {
         var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
         if (existingUser != null)
-            throw new Exception($"User with email {dto.Email} already exists.");
+            throw new BusinessException($"User with email {dto.Email} already exists.");
 
         var user = new User
         {
@@ -47,7 +47,6 @@ public class UserService : IUserService
             Email = dto.Email,
             UserType = dto.UserType, 
             IsActive = true,
-            EmailVerified = false,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             PasswordHash = HashPassword(dto.Password)
@@ -58,18 +57,18 @@ public class UserService : IUserService
 
         return MapToDto(user);
     }
-    private string HashPassword(string password)
+
+    private static string HashPassword(string password)
     {
         return BCrypt.Net.BCrypt.HashPassword(password);
     }
+
     public async Task<UserDto> UpdateAsync(Guid id, UpdateUserDto dto)
     {
         var user = await _userRepository.GetByIdAsync(id);
         if (user == null) throw new NotFoundException($"User with ID {id} not found.");
 
         if (dto.IsActive.HasValue) user.IsActive = dto.IsActive.Value;
-        if (dto.EmailVerified.HasValue) user.EmailVerified = dto.EmailVerified.Value;
-
         user.UpdatedAt = DateTime.UtcNow;
 
         await _userRepository.UpdateAsync(user);
@@ -95,7 +94,6 @@ public class UserService : IUserService
             Email = user.Email,
             UserType = user.UserType,
             IsActive = user.IsActive,
-            EmailVerified = user.EmailVerified,
             CreatedAt = user.CreatedAt
         };
     }
