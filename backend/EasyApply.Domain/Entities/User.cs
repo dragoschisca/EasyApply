@@ -8,7 +8,6 @@ public class User
     public string PasswordHash { get; set; } = string.Empty;
     public UserType UserType { get; set; }
     public bool IsActive { get; set; } = true;
-    public bool EmailVerified { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
