@@ -8,7 +8,6 @@ public class CV
     public string FileName { get; set; } = string.Empty;
     public string FilePath { get; set; } = string.Empty;
     public int FileSize { get; set; }
-    public string? ParsedContent { get; set; } // content from CV
     public string? Skills { get; set; } // JSON string
     public string? Experience { get; set; } // JSON string
     public string? Education { get; set; } // JSON string
