@@ -1,12 +1,13 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BCrypt.Net;
 using EasyApply.BusinessLayer.Structure.DTOs.Auth;
+using EasyApply.BusinessLayer.Structure.Validation;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Enums;
 using EasyApply.Domain.Interfaces.Repositories;
+using EasyApply.Domain.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -36,10 +37,12 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
     {
+        ValidationHelper.ValidateRegister(request);
+
         var existingUser = await _userRepository.GetByEmailAsync(request.Email);
         if (existingUser != null)
         {
-            throw new Exception("User with this email already exists.");
+            throw new ConflictException("User with this email already exists.");
         }
 
         var user = new User
@@ -106,10 +109,11 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
     {
+        ValidationHelper.ValidateLogin(request);
         var user = await _userRepository.GetByEmailAsync(request.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            throw new Exception("Invalid email or password.");
+            throw new UnauthorizedException("Invalid email or password.");
         }
 
         var token = GenerateJwtToken(user);
@@ -119,8 +123,7 @@ public class AuthService : IAuthService
 
         if (user.UserType == UserType.Candidate)
         {
-            var candidates = await _candidateRepository.GetAllAsync();
-            var candidate = candidates.FirstOrDefault(c => c.UserId == user.Id);
+            var candidate = await _candidateRepository.GetByUserIdAsync(user.Id);
             if (candidate != null)
             {
                 firstName = candidate.FirstName;
@@ -129,8 +132,7 @@ public class AuthService : IAuthService
         }
         else if (user.UserType == UserType.Company)
         {
-            var companies = await _companyRepository.GetAllAsync();
-            var company = companies.FirstOrDefault(c => c.UserId == user.Id);
+            var company = await _companyRepository.GetByUserIdAsync(user.Id);
             if (company != null)
             {
                 firstName = company.CompanyName;
@@ -162,12 +164,12 @@ public class AuthService : IAuthService
 
         if (string.IsNullOrEmpty(secret))
         {
-            throw new Exception("JWT Secret is not configured. Please set 'Jwt:Secret' in appsettings.json or 'JWT_SECRET' in environment variables.");
+            throw new Exception("JWT Secret is not configured.");
         }
 
-        var issuer = jwtSettings["Issuer"] ?? _configuration["JWT_ISSUER"] ?? "EasyApply";
-        var audience = jwtSettings["Audience"] ?? _configuration["JWT_AUDIENCE"] ?? "EasyApplyUsers";
-        var expiryMinutesStr = jwtSettings["ExpiryMinutes"] ?? _configuration["JWT_EXPIRY_MINUTES"] ?? "60";
+        var issuer = jwtSettings["Issuer"] ?? "EasyApply";
+        var audience = jwtSettings["Audience"] ?? "EasyApplyUsers";
+        var expiryMinutesStr = jwtSettings["ExpiryMinutes"] ?? "60";
         
         if (!double.TryParse(expiryMinutesStr, out double expiryMinutes))
         {
