@@ -1,29 +1,32 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Job;
+using EasyApply.BusinessLayer.Structure.Validation;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace EasyApply.BusinessLayer.Core;
 
 public class JobService : IJobService
 {
+    private const decimal DefaultMarketSalary = 25000;
     private readonly IJobRepository _jobRepository;
     private readonly ICompanyRepository _companyRepository;
     private readonly IGeocodingService _geocodingService;
-    private readonly EasyApply.DataAccess.Data.ApplicationDbContext _context;
+    private readonly ILogger<JobService> _logger;
 
     public JobService(
         IJobRepository jobRepository,
         ICompanyRepository companyRepository,
         IGeocodingService geocodingService,
-        EasyApply.DataAccess.Data.ApplicationDbContext context)
+        ILogger<JobService> logger)
     {
         _jobRepository = jobRepository;
         _companyRepository = companyRepository;
         _geocodingService = geocodingService;
-        _context = context;
+        _logger = logger;
     }
 
     public async Task<JobDto> GetByIdAsync(Guid id)
@@ -57,10 +60,10 @@ public class JobService : IJobService
 
     public async Task<JobDto> CreateAsync(CreateJobDto dto)
     {
+        ValidationHelper.ValidateCreateJob(dto);
         var company = await _companyRepository.GetByIdAsync(dto.CompanyId);
         if (company == null) throw new NotFoundException($"Company with ID {dto.CompanyId} not found.");
 
-        // Geocode the address server-side so coordinates are always stored in the DB.
         double? lat = null, lon = null;
         var addressToGeocode = dto.Address ?? dto.Location;
         if (!string.IsNullOrWhiteSpace(addressToGeocode) &&
@@ -83,7 +86,6 @@ public class JobService : IJobService
             LocationType = dto.LocationType,
             Location = dto.Location,
             Address = dto.Address,
-            CompanyCulture = dto.CompanyCulture,
             Latitude = lat,
             Longitude = lon,
             SalaryMin = dto.SalaryMin,
@@ -100,13 +102,13 @@ public class JobService : IJobService
         await _jobRepository.AddAsync(job);
         await _jobRepository.SaveChangesAsync();
 
-        // Re-attach company for the DTO mapping (navigation property not populated after Add).
         job.Company = company;
         return MapToDto(job);
     }
 
     public async Task<JobDto> UpdateAsync(Guid id, UpdateJobDto dto)
     {
+        ValidationHelper.ValidateUpdateJob(dto);
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) throw new NotFoundException($"Job with ID {id} not found.");
 
@@ -119,14 +121,12 @@ public class JobService : IJobService
         if (dto.ExperienceLevel.HasValue) job.ExperienceLevel = dto.ExperienceLevel.Value;
         if (dto.LocationType.HasValue) job.LocationType = dto.LocationType.Value;
         if (dto.Location != null) job.Location = dto.Location;
-        if (dto.CompanyCulture != null) job.CompanyCulture = dto.CompanyCulture;
         if (dto.SalaryMin.HasValue) job.SalaryMin = dto.SalaryMin.Value;
         if (dto.SalaryMax.HasValue) job.SalaryMax = dto.SalaryMax.Value;
         if (dto.IsRemote.HasValue) job.IsRemote = dto.IsRemote.Value;
         if (dto.IsActive.HasValue) job.IsActive = dto.IsActive.Value;
         if (dto.ExpiresAt.HasValue) job.ExpiresAt = dto.ExpiresAt.Value;
 
-        // Re-geocode if the address changed.
         if (dto.Address != null && dto.Address != job.Address)
         {
             job.Address = dto.Address;
@@ -162,23 +162,20 @@ public class JobService : IJobService
 
     public async Task IncrementViewCountAsync(Guid id)
     {
-        // Consolidate both operations into one transaction
         await _jobRepository.IncrementViewCountAsync(id, saveChanges: false);
         
-        // Record detailed view for analytics
-        _context.JobViews.Add(new JobView
+        await _jobRepository.AddJobViewAsync(new JobView
         {
             Id = Guid.NewGuid(),
             JobId = id,
             ViewedAt = DateTime.UtcNow
         });
         
-        await _context.SaveChangesAsync();
+        await _jobRepository.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<JobDto>> GetRecommendationsAsync(Guid id, int count)
     {
-        // SQL-level filtering instead of in-memory
         var recommendations = await _jobRepository.GetRecommendationsAsync(id, count);
         return recommendations.Select(MapToDto);
     }
@@ -194,8 +191,7 @@ public class JobService : IJobService
 
         decimal marketAverage = averages.Any() ? averages.Average() : 0;
         
-        // Use a default market average if no data is found to provide some value
-        if (marketAverage == 0) marketAverage = 25000; // Generic average for the region
+        if (marketAverage == 0) marketAverage = DefaultMarketSalary;
 
         decimal targetSalary = ((request.SalaryMin ?? request.SalaryMax ?? 0) + (request.SalaryMax ?? request.SalaryMin ?? 0)) / 2;
         
@@ -225,7 +221,7 @@ public class JobService : IJobService
         };
     }
 
-    private static JobDto MapToDto(Job job)
+    private JobDto MapToDto(Job job)
     {
         var dto = new JobDto
         {
@@ -242,7 +238,6 @@ public class JobService : IJobService
             LocationType = job.LocationType,
             Location = job.Location,
             Address = job.Address,
-            CompanyCulture = job.CompanyCulture,
             Latitude = job.Latitude,
             Longitude = job.Longitude,
             SalaryMin = job.SalaryMin,
@@ -261,9 +256,9 @@ public class JobService : IJobService
             {
                 dto.RequiredSkills = JsonSerializer.Deserialize<List<string>>(job.RequiredSkills) ?? new List<string>();
             }
-            catch
+            catch (Exception ex)
             {
-                // ignored
+                _logger.LogError(ex, "Failed to deserialize RequiredSkills for job {JobId}", job.Id);
             }
         }
 
