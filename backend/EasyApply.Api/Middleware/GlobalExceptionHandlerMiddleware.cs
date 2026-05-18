@@ -39,6 +39,12 @@ public class GlobalExceptionHandlerMiddleware : IMiddleware
             case BusinessException:
                 code = HttpStatusCode.BadRequest;
                 break;
+            case ConflictException:
+                code = HttpStatusCode.Conflict;
+                break;
+            case ForbiddenException:
+                code = HttpStatusCode.Forbidden;
+                break;
             case UnauthorizedException:
                 code = HttpStatusCode.Unauthorized;
                 break;
