@@ -92,7 +92,6 @@ public class RecommendationService : IRecommendationService
             Latitude = job.Latitude,
             Longitude = job.Longitude,
             LocationType = job.LocationType,
-            CompanyCulture = job.CompanyCulture,
             IsActive = job.IsActive,
             ViewsCount = job.ViewsCount,
             ApplicationsCount = job.ApplicationsCount,
