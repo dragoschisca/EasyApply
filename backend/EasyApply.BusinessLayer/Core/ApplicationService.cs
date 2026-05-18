@@ -1,5 +1,6 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Application;
 using EasyApply.BusinessLayer.Structure.DTOs.AI;
+using EasyApply.BusinessLayer.Structure.Validation;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Enums;
 using EasyApply.Domain.Exceptions;
@@ -63,11 +64,13 @@ public class ApplicationService : IApplicationService
 
     public async Task<ApplicationDto> CreateAsync(Guid candidateId, CreateApplicationDto dto)
     {
+        ValidationHelper.ValidateCreateApplication(dto);
+
         var job = await _jobRepository.GetByIdAsync(dto.JobId);
         if (job == null) throw new NotFoundException($"Job with ID {dto.JobId} not found.");
 
         var exists = await _applicationRepository.ExistsAsync(candidateId, dto.JobId);
-        if (exists) throw new BusinessException("You have already applied to this job.");
+        if (exists) throw new ConflictException("You have already applied to this job.");
 
         var application = new EasyApply.Domain.Entities.Application
         {
@@ -81,7 +84,7 @@ public class ApplicationService : IApplicationService
 
         await _applicationRepository.AddAsync(application);
         
-        // Increment application count on job
+        // Increment application count on job (Atomic transaction via shared DbContext)
         job.ApplicationsCount++;
         await _jobRepository.UpdateAsync(job);
         
@@ -171,7 +174,7 @@ public class ApplicationService : IApplicationService
         return MapToDto(application);
     }
 
-    private static ApplicationDto MapToDto(Application application)
+    private ApplicationDto MapToDto(Application application)
     {
         var dto = new ApplicationDto
         {
@@ -192,18 +195,18 @@ public class ApplicationService : IApplicationService
         };
 
         if (!string.IsNullOrEmpty(application.ScoreDetails))
-    {
-        try 
         {
-            var details = System.Text.Json.JsonSerializer.Deserialize<EasyApply.BusinessLayer.Structure.DTOs.AI.CompatibilityResultDto>(application.ScoreDetails);
-            if (details != null)
+            try 
             {
-                dto.Advantages = details.Advantages;
-                dto.Disadvantages = details.Disadvantages;
+                var details = System.Text.Json.JsonSerializer.Deserialize<EasyApply.BusinessLayer.Structure.DTOs.AI.CompatibilityResultDto>(application.ScoreDetails);
+                if (details != null)
+                {
+                    dto.Advantages = details.Advantages;
+                    dto.Disadvantages = details.Disadvantages;
+                }
             }
+            catch { /* Fallback */ }
         }
-        catch { /* Fallback */ }
-    }
-    return dto;
+        return dto;
     }
 }
