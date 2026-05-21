@@ -9,6 +9,7 @@ using DotNetEnv;
 using System.Text.Json.Serialization;
 using EasyApply.BusinessLayer.Core.AI;
 using EasyApply.Api.Middleware;
+using FluentEmail.MailKitSmtp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,22 +69,45 @@ builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<IGeminiService, GeminiService>();
+
 builder.Services.AddScoped<ISupabaseStorageService, SupabaseStorageService>();
+
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+#region EMAIL_SETUP
 
-// Geocoding — named HttpClient with required Nominatim User-Agent header.
+
+builder.Services
+    .AddFluentEmail(
+        Environment.GetEnvironmentVariable("SMTP_FROM_EMAIL") ?? "no-reply@easyapply.com",
+        Environment.GetEnvironmentVariable("SMTP_FROM_NAME") ?? "EasyApply")
+    .AddRazorRenderer()
+    .AddMailKitSender(new SmtpClientOptions
+    {
+        Server = Environment.GetEnvironmentVariable("SMTP_HOST"),
+        Port = int.Parse(Environment.GetEnvironmentVariable("SMTP_PORT") ?? "2525"),
+        User = Environment.GetEnvironmentVariable("SMTP_USER"),
+        Password = Environment.GetEnvironmentVariable("SMTP_PASS"),
+        UseSsl = false
+    });
+
+#endregion
+
+
 builder.Services.AddHttpClient("Nominatim", client =>
 {
     client.DefaultRequestHeaders.Add("User-Agent", "EasyApply/1.0 (job-portal)");
     client.Timeout = TimeSpan.FromSeconds(10);
 });
-builder.Services.AddScoped<IGeocodingService, GeocodingService>();
 
+builder.Services.AddScoped<IGeocodingService, GeocodingService>();
 builder.Services.AddScoped<GlobalExceptionHandlerMiddleware>();
 builder.Services.AddHttpClient();
 
@@ -141,7 +165,7 @@ app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "EasyApply API V1");
-    options.RoutePrefix = "swagger"; // Standard: Accessible at /swagger
+    options.RoutePrefix = "swagger"; 
 });
 
 app.UseHttpsRedirection();
