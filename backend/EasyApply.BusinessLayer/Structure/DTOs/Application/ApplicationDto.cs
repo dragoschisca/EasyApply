@@ -16,7 +16,7 @@ public class ApplicationDto
     public List<string> Advantages { get; set; } = new();
     public List<string> Disadvantages { get; set; } = new();
     public string? ScoreDetails { get; set; }
-    public string? CoverLetter { get; set; }
+    public string? RejectionFeedback { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
