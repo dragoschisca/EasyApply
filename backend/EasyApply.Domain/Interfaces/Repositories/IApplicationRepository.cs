@@ -9,4 +9,6 @@ public interface IApplicationRepository : IBaseRepository<Application>
     Task<Application?> GetWithDetailsAsync(Guid id);
     Task<bool> ExistsAsync(Guid candidateId, Guid jobId);
     Task<int> GetCountByCompanyIdAsync(Guid companyId);
+    Task<IEnumerable<ApplicationStatusHistory>> GetStatusTimelineAsync(Guid applicationId);
+    Task AddStatusHistoryAsync(ApplicationStatusHistory history);
 }
