@@ -23,6 +23,14 @@ public class ApplicationController : ControllerBase
         return Ok(result);
     }
 
+    // GET: api/application/{id}/timeline
+    [HttpGet("{id:guid}/timeline")]
+    public async Task<IActionResult> GetStatusTimeline(Guid id)
+    {
+        var result = await _applicationService.GetStatusTimelineAsync(id);
+        return Ok(result);
+    }
+
     // GET: api/application/candidate/{candidateId}
     [HttpGet("candidate/{candidateId:guid}")]
     public async Task<IActionResult> GetByCandidateId(Guid candidateId)
