@@ -121,6 +121,97 @@ public class JobRepository : IJobRepository
         return (items, total);
     }
 
+    public async Task<(IEnumerable<Job> Items, int TotalCount)> SearchAsync(EasyApply.Domain.Models.Job.SearchJobDto searchDto)
+    {
+        var query = _context.Jobs
+            .Include(j => j.Company)
+            .Where(j => j.IsActive)
+            .AsQueryable();
+
+        // 1. Full-text search (SearchTerm) on Title, Description, Company.CompanyName
+        if (!string.IsNullOrWhiteSpace(searchDto.SearchTerm))
+        {
+            var lowerSearchTerm = $"%{searchDto.SearchTerm.ToLower()}%";
+            query = query.Where(j =>
+                EF.Functions.ILike(j.Title, lowerSearchTerm) ||
+                EF.Functions.ILike(j.Description, lowerSearchTerm) ||
+                EF.Functions.ILike(j.Company.CompanyName, lowerSearchTerm));
+        }
+
+        // 2. Salary filter
+        if (searchDto.MinSalary.HasValue)
+        {
+            query = query.Where(j => !j.SalaryMax.HasValue || j.SalaryMax.Value >= searchDto.MinSalary.Value);
+        }
+        if (searchDto.MaxSalary.HasValue)
+        {
+            query = query.Where(j => !j.SalaryMin.HasValue || j.SalaryMin.Value <= searchDto.MaxSalary.Value);
+        }
+
+        // 3. Location filter (exact match)
+        if (!string.IsNullOrWhiteSpace(searchDto.LocationFilter))
+        {
+            query = query.Where(j => j.Location != null && j.Location == searchDto.LocationFilter);
+        }
+
+        // 4. Employment Type filter
+        if (searchDto.EmploymentType.HasValue)
+        {
+            query = query.Where(j => j.EmploymentType == searchDto.EmploymentType.Value);
+        }
+
+        // 5. Experience Level filter
+        if (searchDto.ExperienceLevel.HasValue)
+        {
+            query = query.Where(j => j.ExperienceLevel == searchDto.ExperienceLevel.Value);
+        }
+
+        // 6. Skills filter (jobs requiring ALL these skills)
+        if (searchDto.Skills != null && searchDto.Skills.Any())
+        {
+            foreach (var skill in searchDto.Skills)
+            {
+                query = query.Where(j => j.RequiredSkills != null && j.RequiredSkills.Contains(skill));
+            }
+        }
+
+        // 7. Sorting
+        switch (searchDto.SortBy)
+        {
+            case EasyApply.Domain.Models.Job.JobSortOption.Newest:
+                query = query.OrderByDescending(j => j.ExpiresAt)
+                             .ThenByDescending(j => j.CreatedAt);
+                break;
+
+            case EasyApply.Domain.Models.Job.JobSortOption.MostApplied:
+                query = query.OrderByDescending(j => j.ApplicationsCount);
+                break;
+
+            case EasyApply.Domain.Models.Job.JobSortOption.Relevance:
+            default:
+                if (!string.IsNullOrWhiteSpace(searchDto.SearchTerm))
+                {
+                    var term = searchDto.SearchTerm.ToLower();
+                    query = query.OrderByDescending(j =>
+                        (j.Title.ToLower().Contains(term) ? 10 : 0) +
+                        (j.Company.CompanyName.ToLower().Contains(term) ? 5 : 0) +
+                        (j.Description.ToLower().Contains(term) ? 1 : 0)
+                    );
+                }
+                else
+                {
+                    query = query.OrderByDescending(j => j.CreatedAt);
+                }
+                break;
+        }
+
+        var total = await query.CountAsync();
+        var skip = (searchDto.Page - 1) * searchDto.PageSize;
+        var items = await query.Skip(skip).Take(searchDto.PageSize).ToListAsync();
+
+        return (items, total);
+    }
+
     public async Task<IEnumerable<Job>> GetRecommendationsAsync(Guid jobId, int count)
     {
         var sourceJob = await _context.Jobs.AsNoTracking().FirstOrDefaultAsync(j => j.Id == jobId);
