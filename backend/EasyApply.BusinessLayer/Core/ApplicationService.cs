@@ -105,6 +105,8 @@ public class ApplicationService : IApplicationService
 
     public async Task<ApplicationDto> UpdateStatusAsync(Guid id, UpdateApplicationStatusDto dto)
     {
+        ValidationHelper.ValidateUpdateApplicationStatus(dto);
+
         var application = await _applicationRepository.GetWithDetailsAsync(id);
         if (application == null) throw new NotFoundException($"Application with ID {id} not found.");
 
@@ -119,7 +121,25 @@ public class ApplicationService : IApplicationService
 
         application.ReviewedAt = DateTime.UtcNow;
 
+        if (status == ApplicationStatus.Rejected)
+        {
+            application.RejectionFeedback = dto.Feedback;
+        }
+
         await _applicationRepository.UpdateAsync(application);
+
+        // Add history record
+        var history = new ApplicationStatusHistory
+        {
+            Id = Guid.NewGuid(),
+            ApplicationId = application.Id,
+            Status = status,
+            Feedback = dto.Feedback,
+            ChangedBy = "Recruiter",
+            ChangedAt = DateTime.UtcNow
+        };
+        await _applicationRepository.AddStatusHistoryAsync(history);
+        
         await _applicationRepository.SaveChangesAsync();
 
         // Notify candidate using their UserId (not CandidateId)
@@ -131,9 +151,33 @@ public class ApplicationService : IApplicationService
                 "Application Update",
                 $"Your application for '{jobTitle}' has been updated to {status}.",
                 $"/applications");
+
+            if (status == ApplicationStatus.Rejected && application.Candidate.User != null)
+            {
+                _ = _emailService.SendApplicationRejectionEmailAsync(
+                    application.Candidate.User.Email,
+                    $"{application.Candidate.FirstName} {application.Candidate.LastName}",
+                    jobTitle,
+                    dto.Feedback ?? string.Empty);
+            }
         }
 
         return MapToDto(application);
+    }
+
+    public async Task<IEnumerable<StatusChangeDto>> GetStatusTimelineAsync(Guid id)
+    {
+        var application = await _applicationRepository.GetByIdAsync(id);
+        if (application == null) throw new NotFoundException($"Application with ID {id} not found.");
+
+        var history = await _applicationRepository.GetStatusTimelineAsync(id);
+        return history.Select(h => new StatusChangeDto
+        {
+            Status = h.Status.ToString(),
+            ChangedAt = h.ChangedAt,
+            Feedback = h.Feedback,
+            ChangedBy = h.ChangedBy
+        });
     }
 
     public async Task DeleteAsync(Guid id)
@@ -190,6 +234,7 @@ public class ApplicationService : IApplicationService
             Status = application.Status.ToString(),
             CompatibilityScore = (double?)(application.CompatibilityScore),
             ScoreDetails = application.ScoreDetails,
+            RejectionFeedback = application.RejectionFeedback,
             CreatedAt = application.AppliedAt,
             UpdatedAt = application.ReviewedAt ?? application.AppliedAt
         };
