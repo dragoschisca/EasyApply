@@ -86,4 +86,27 @@ public class EmailService : IEmailService
             _logger.LogError(ex, "Exception occurred while sending interview invite to {Email}", email);
         }
     }
+
+    public async Task SendApplicationRejectionEmailAsync(string email, string name, string jobTitle, string feedback)
+    {
+        try
+        {
+            var templateFile = Path.Combine(_templatePath, "ApplicationRejection.cshtml");
+            var result = await _emailFactory
+                .Create()
+                .To(email)
+                .Subject($"Application Update: {jobTitle}")
+                .UsingTemplateFromFile(templateFile, new { Name = name, JobTitle = jobTitle, Feedback = feedback })
+                .SendAsync();
+
+            if (!result.Successful)
+            {
+                _logger.LogError("Failed to send application rejection email to {Email}: {Errors}", email, string.Join(", ", result.ErrorMessages));
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exception occurred while sending application rejection email to {Email}", email);
+        }
+    }
 }
