@@ -93,4 +93,17 @@ public class ApplicationRepository : IApplicationRepository
         return await _context.Applications
             .CountAsync(a => a.Job.CompanyId == companyId);
     }
+
+    public async Task<IEnumerable<ApplicationStatusHistory>> GetStatusTimelineAsync(Guid applicationId)
+    {
+        return await _context.ApplicationStatusHistories
+            .Where(h => h.ApplicationId == applicationId)
+            .OrderByDescending(h => h.ChangedAt)
+            .ToListAsync();
+    }
+
+    public async Task AddStatusHistoryAsync(ApplicationStatusHistory history)
+    {
+        await _context.ApplicationStatusHistories.AddAsync(history);
+    }
 }
