@@ -10,6 +10,7 @@ public interface IApplicationService
     Task<IEnumerable<ApplicationDto>> GetByJobIdAsync(Guid jobId);
     Task<ApplicationDto> CreateAsync(Guid candidateId, CreateApplicationDto dto);
     Task<ApplicationDto> UpdateStatusAsync(Guid id, UpdateApplicationStatusDto dto);
+    Task<IEnumerable<StatusChangeDto>> GetStatusTimelineAsync(Guid id);
     Task DeleteAsync(Guid id);
     Task<ApplicationDto> AnalyzeAsync(Guid id);
 }
