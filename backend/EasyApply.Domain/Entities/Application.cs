@@ -12,6 +12,7 @@ public class Application
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
     public DateTime AppliedAt { get; set; } = DateTime.UtcNow;
     public DateTime? ReviewedAt { get; set; }
+    public string? RejectionFeedback { get; set; }
 
     // Navigation 
     public Job Job { get; set; } = null!;
