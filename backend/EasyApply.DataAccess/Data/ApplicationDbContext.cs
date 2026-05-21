@@ -1,3 +1,4 @@
+using EasyApply.DataAccess.Data.Configurations;
 using EasyApply.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,11 +21,19 @@ public class ApplicationDbContext: DbContext
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<CompanyProfileView> CompanyProfileViews { get; set; }
     public DbSet<JobView> JobViews { get; set; }
+    public DbSet<ApplicationStatusHistory> ApplicationStatusHistories { get; set; }
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfiguration(new ApplicationStatusHistoryConfiguration());
+
+        modelBuilder.Entity<Application>(entity =>
+        {
+            entity.Property(a => a.RejectionFeedback).HasColumnName("rejection_feedback");
+        });
 
         modelBuilder.Entity<User>(entity =>
         {
