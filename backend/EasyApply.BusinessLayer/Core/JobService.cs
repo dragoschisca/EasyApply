@@ -52,6 +52,46 @@ public class JobService : IJobService
         return (result.Jobs.Select(MapToDto), result.Total);
     }
 
+    public async Task<SearchJobResultDto> SearchAsync(SearchJobDto searchDto)
+    {
+        if (searchDto.Page < 1)
+        {
+            throw new ValidationException(new Dictionary<string, string[]> { { nameof(searchDto.Page), new[] { "Page must be greater than or equal to 1." } } });
+        }
+        if (searchDto.PageSize < 1 || searchDto.PageSize > 100)
+        {
+            throw new ValidationException(new Dictionary<string, string[]> { { nameof(searchDto.PageSize), new[] { "PageSize must be between 1 and 100." } } });
+        }
+
+        var domainDto = new EasyApply.Domain.Models.Job.SearchJobDto
+        {
+            SearchTerm = searchDto.SearchTerm,
+            MinSalary = searchDto.MinSalary,
+            MaxSalary = searchDto.MaxSalary,
+            LocationFilter = searchDto.LocationFilter,
+            EmploymentType = searchDto.EmploymentType,
+            ExperienceLevel = searchDto.ExperienceLevel,
+            Skills = searchDto.Skills,
+            Page = searchDto.Page,
+            PageSize = searchDto.PageSize,
+            SortBy = (EasyApply.Domain.Models.Job.JobSortOption)searchDto.SortBy
+        };
+
+        var (items, totalCount) = await _jobRepository.SearchAsync(domainDto);
+
+        var jobs = items.Select(MapToDto).ToList();
+        var totalPages = (int)Math.Ceiling((double)totalCount / searchDto.PageSize);
+
+        return new SearchJobResultDto
+        {
+            Jobs = jobs,
+            TotalCount = totalCount,
+            Page = searchDto.Page,
+            PageSize = searchDto.PageSize,
+            TotalPages = totalPages
+        };
+    }
+
     public async Task<IEnumerable<JobDto>> GetNearbyAsync(double latitude, double longitude, double radiusKm)
     {
         var jobs = await _jobRepository.GetNearbyAsync(latitude, longitude, radiusKm);
