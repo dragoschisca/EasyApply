@@ -57,6 +57,14 @@ public class JobController : ControllerBase
         return Ok(new { Jobs = jobs, Total = total, Page = page, PageSize = pageSize });
     }
 
+    // POST: api/job/search
+    [HttpPost("search")]
+    public async Task<IActionResult> Search([FromBody] SearchJobDto searchDto)
+    {
+        var result = await _jobService.SearchAsync(searchDto);
+        return Ok(result);
+    }
+
     // GET: api/job/nearby?lat=47.01&lng=28.86&radiusKm=10
     [HttpGet("nearby")]
     public async Task<IActionResult> GetNearby(
