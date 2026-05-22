@@ -7,6 +7,7 @@ using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace EasyApply.BusinessLayer.Core;
 
@@ -94,10 +95,12 @@ public class ApplicationService : IApplicationService
         var candidate = await _candidateRepository.GetWithDetailsAsync(candidateId);
         if (candidate != null && candidate.User != null)
         {
-            _ = _emailService.SendApplicationReceivedEmailAsync(
-                candidate.User.Email, 
-                $"{candidate.FirstName} {candidate.LastName}", 
-                job.Title);
+        // Fire-and-forget: email confirmation does not block the response.
+        // Failures are logged internally by EmailService.
+        _ = _emailService.SendApplicationReceivedEmailAsync(
+            candidate.User.Email,
+            $"{candidate.FirstName} {candidate.LastName}",
+            job.Title);
         }
 
         return MapToDto(application);
@@ -210,7 +213,7 @@ public class ApplicationService : IApplicationService
             application.Job.RequiredSkills ?? string.Empty);
 
         application.CompatibilityScore = (decimal)result.Score;
-        application.ScoreDetails = System.Text.Json.JsonSerializer.Serialize(result);
+        application.ScoreDetails = JsonSerializer.Serialize(result);
         
         await _applicationRepository.UpdateAsync(application);
         await _applicationRepository.SaveChangesAsync();
@@ -243,7 +246,7 @@ public class ApplicationService : IApplicationService
         {
             try 
             {
-                var details = System.Text.Json.JsonSerializer.Deserialize<EasyApply.BusinessLayer.Structure.DTOs.AI.CompatibilityResultDto>(application.ScoreDetails);
+                var details = JsonSerializer.Deserialize<CompatibilityResultDto>(application.ScoreDetails);
                 if (details != null)
                 {
                     dto.Advantages = details.Advantages;
