@@ -63,64 +63,6 @@ public class JobRepository : IJobRepository
         return await query.ToListAsync();
     }
 
-    public async Task<(IEnumerable<Job> Jobs, int Total)> SearchAsync(
-        string? keyword,
-        string? location,
-        string? category,
-        string? employmentType,
-        string? experienceLevel,
-        int? locationType,
-        decimal? minSalary,
-        decimal? maxSalary,
-        int page,
-        int pageSize)
-    {
-        var query = _context.Jobs
-            .Include(j => j.Company)
-            .Where(j => j.IsActive)
-            .AsQueryable();
-
-        if (minSalary.HasValue)
-            query = query.Where(j => !j.SalaryMax.HasValue || j.SalaryMax.Value >= minSalary.Value);
-
-        if (maxSalary.HasValue)
-            query = query.Where(j => !j.SalaryMin.HasValue || j.SalaryMin.Value <= maxSalary.Value);
-
-        if (locationType.HasValue)
-            query = query.Where(j => (int)j.LocationType == locationType.Value);
-
-        if (!string.IsNullOrWhiteSpace(keyword))
-        {
-            var lowerKeyword = $"%{keyword.ToLower()}%";
-            query = query.Where(j =>
-                EF.Functions.ILike(j.Title, lowerKeyword) ||
-                EF.Functions.ILike(j.Description, lowerKeyword) ||
-                EF.Functions.ILike(j.Requirements, lowerKeyword));
-        }
-
-        if (!string.IsNullOrWhiteSpace(location))
-        {
-            var lowerLocation = $"%{location.ToLower()}%";
-            query = query.Where(j => j.Location != null && EF.Functions.ILike(j.Location, lowerLocation));
-        }
-
-        if (!string.IsNullOrWhiteSpace(category))
-            query = query.Where(j => j.Category == category);
-
-        if (!string.IsNullOrWhiteSpace(employmentType) &&
-            Enum.TryParse<EasyApply.Domain.Enums.WorkTime>(employmentType, true, out var et))
-            query = query.Where(j => j.EmploymentType == et);
-
-        if (!string.IsNullOrWhiteSpace(experienceLevel) &&
-            Enum.TryParse<EasyApply.Domain.Enums.ExperienceLevel>(experienceLevel, true, out var el))
-            query = query.Where(j => j.ExperienceLevel == el);
-
-        var total = await query.CountAsync();
-        var skip = (page - 1) * pageSize;
-        var items = await query.OrderByDescending(j => j.CreatedAt).Skip(skip).Take(pageSize).ToListAsync();
-        return (items, total);
-    }
-
     public async Task<(IEnumerable<Job> Items, int TotalCount)> SearchAsync(EasyApply.Domain.Models.Job.SearchJobDto searchDto)
     {
         var query = _context.Jobs
