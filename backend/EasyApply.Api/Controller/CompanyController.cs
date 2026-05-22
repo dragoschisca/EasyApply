@@ -20,7 +20,8 @@ public class CompanyController : ControllerBase
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await _companyService.GetByIdAsync(id);
-        await _companyService.IncrementViewCountAsync(id);
+        // Fire-and-forget: increment view count without delaying the response
+        _ = _companyService.IncrementViewCountAsync(id);
         return Ok(result);
     }
 
