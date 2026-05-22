@@ -55,7 +55,9 @@ public class CandidateRepository : ICandidateRepository
 
     public async Task<Candidate?> GetByUserIdAsync(Guid userId)
     {
-        return await _context.Candidates.FirstOrDefaultAsync(c => c.UserId == userId);
+        return await _context.Candidates
+            .Include(c => c.User)
+            .FirstOrDefaultAsync(c => c.UserId == userId);
     }
 
     public async Task<Candidate?> GetWithDetailsAsync(Guid id)
@@ -67,8 +69,9 @@ public class CandidateRepository : ICandidateRepository
 
     public async Task<IEnumerable<Candidate>> SearchAsync(string term)
     {
+        var pattern = $"%{term}%";
         return await _context.Candidates
-            .Where(c => c.FirstName.Contains(term) || c.LastName.Contains(term))
+            .Where(c => EF.Functions.ILike(c.FirstName, pattern) || EF.Functions.ILike(c.LastName, pattern))
             .ToListAsync();
     }
 }
