@@ -4,7 +4,6 @@ using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace EasyApply.BusinessLayer.Core;
 
@@ -82,7 +81,6 @@ public class CVService : ICVService
         if (cv == null) throw new NotFoundException($"CV with ID {id} not found.");
 
         if (!string.IsNullOrWhiteSpace(dto.FileName)) cv.FileName = dto.FileName;
-        if (!string.IsNullOrWhiteSpace(dto.FilePath)) cv.FilePath = dto.FilePath;
         if (dto.FileSize.HasValue) cv.FileSize = dto.FileSize.Value;
         if (dto.Skills != null) cv.Skills = dto.Skills;
         if (dto.Experience != null) cv.Experience = dto.Experience;
