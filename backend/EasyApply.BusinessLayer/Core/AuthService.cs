@@ -116,6 +116,11 @@ public class AuthService : IAuthService
             throw new UnauthorizedException("Invalid email or password.");
         }
 
+        if (!user.IsActive)
+        {
+            throw new UnauthorizedException("This account has been deactivated.");
+        }
+
         var token = GenerateJwtToken(user);
 
         string firstName = string.Empty;
@@ -157,21 +162,18 @@ public class AuthService : IAuthService
     private string GenerateJwtToken(User user)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
-        
-        var secret = jwtSettings["Secret"] 
-                    ?? _configuration["JWT_SECRET"] 
-                    ?? Environment.GetEnvironmentVariable("JWT_SECRET");
+
+        var secret = jwtSettings["Secret"] ?? Environment.GetEnvironmentVariable("Jwt__Secret");
 
         if (string.IsNullOrEmpty(secret))
         {
-            throw new Exception("JWT Secret is not configured.");
+            throw new BusinessException("JWT Secret is not configured.");
         }
 
         var issuer = jwtSettings["Issuer"] ?? "EasyApply";
         var audience = jwtSettings["Audience"] ?? "EasyApplyUsers";
-        var expiryMinutesStr = jwtSettings["ExpiryMinutes"] ?? "60";
-        
-        if (!double.TryParse(expiryMinutesStr, out double expiryMinutes))
+
+        if (!double.TryParse(jwtSettings["ExpiryMinutes"] ?? "60", out double expiryMinutes))
         {
             expiryMinutes = 60;
         }
