@@ -4,6 +4,7 @@ using EasyApply.Domain.Entities;
 using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
 using EasyApply.BusinessLayer.Interfaces.Services;
+using EasyApply.Domain.Models.Job;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
@@ -42,15 +43,6 @@ public class JobService : IJobService
         return jobs.Select(MapToDto);
     }
 
-    public async Task<(IEnumerable<JobDto> Jobs, int Total)> SearchAsync(
-        string? keyword, string? location, string? category, string? employmentType,
-        string? experienceLevel, int? locationType, decimal? minSalary, decimal? maxSalary, int page, int pageSize)
-    {
-        var result = await _jobRepository.SearchAsync(
-            keyword, location, category, employmentType, experienceLevel,
-            locationType, minSalary, maxSalary, page, pageSize);
-        return (result.Jobs.Select(MapToDto), result.Total);
-    }
 
     public async Task<SearchJobResultDto> SearchAsync(SearchJobDto searchDto)
     {
@@ -63,21 +55,7 @@ public class JobService : IJobService
             throw new ValidationException(new Dictionary<string, string[]> { { nameof(searchDto.PageSize), new[] { "PageSize must be between 1 and 100." } } });
         }
 
-        var domainDto = new EasyApply.Domain.Models.Job.SearchJobDto
-        {
-            SearchTerm = searchDto.SearchTerm,
-            MinSalary = searchDto.MinSalary,
-            MaxSalary = searchDto.MaxSalary,
-            LocationFilter = searchDto.LocationFilter,
-            EmploymentType = searchDto.EmploymentType,
-            ExperienceLevel = searchDto.ExperienceLevel,
-            Skills = searchDto.Skills,
-            Page = searchDto.Page,
-            PageSize = searchDto.PageSize,
-            SortBy = (EasyApply.Domain.Models.Job.JobSortOption)searchDto.SortBy
-        };
-
-        var (items, totalCount) = await _jobRepository.SearchAsync(domainDto);
+        var (items, totalCount) = await _jobRepository.SearchAsync(searchDto);
 
         var jobs = items.Select(MapToDto).ToList();
         var totalPages = (int)Math.Ceiling((double)totalCount / searchDto.PageSize);
