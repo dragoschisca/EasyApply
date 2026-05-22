@@ -1,4 +1,5 @@
 using EasyApply.BusinessLayer.Interfaces.Services;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -11,10 +12,12 @@ namespace EasyApply.BusinessLayer.Core;
 public class GeocodingService : IGeocodingService
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<GeocodingService> _logger;
 
-    public GeocodingService(IHttpClientFactory httpClientFactory)
+    public GeocodingService(IHttpClientFactory httpClientFactory, ILogger<GeocodingService> logger)
     {
         _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
 
     public async Task<(double? Latitude, double? Longitude)> GeocodeAsync(string address)
@@ -42,9 +45,10 @@ public class GeocodingService : IGeocodingService
                 }
             }
         }
-        catch
+        catch (Exception ex)
         {
             // Geocoding failure is non-fatal — job is still saved, coordinates stay null.
+            _logger.LogWarning(ex, "Geocoding failed for address: {Address}", address);
         }
 
         return (null, null);
