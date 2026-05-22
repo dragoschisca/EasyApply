@@ -63,15 +63,8 @@ public class NotificationRepository : INotificationRepository
 
     public async Task MarkAllAsReadAsync(Guid userId)
     {
-        var unread = await _context.Notifications
+        await _context.Notifications
             .Where(n => n.UserId == userId && !n.IsRead)
-            .ToListAsync();
-        
-        foreach (var n in unread)
-        {
-            n.IsRead = true;
-        }
-        
-        await _context.SaveChangesAsync();
+            .ExecuteUpdateAsync(s => s.SetProperty(n => n.IsRead, true));
     }
 }
