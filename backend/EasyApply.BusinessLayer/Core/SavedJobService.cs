@@ -37,7 +37,7 @@ public class SavedJobService : ISavedJobService
 
     public async Task<SavedJobDto> CreateAsync(CreateSavedJobDto dto)
     {
-        var candidate = await _candidateRepository.GetWithDetailsAsync(dto.CandidateId);
+        var candidate = await _candidateRepository.GetByIdAsync(dto.CandidateId);
         if (candidate == null) throw new NotFoundException($"Candidate with ID {dto.CandidateId} not found.");
 
         var job = await _jobRepository.GetByIdAsync(dto.JobId);
