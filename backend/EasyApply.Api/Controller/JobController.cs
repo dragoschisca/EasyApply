@@ -1,5 +1,6 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Job;
 using EasyApply.BusinessLayer.Interfaces.Services;
+using EasyApply.Domain.Models.Job;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyApply.Api.Controller;
@@ -31,30 +32,6 @@ public class JobController : ControllerBase
     {
         var result = await _jobService.GetByCompanyIdAsync(companyId, activeOnly);
         return Ok(result);
-    }
-
-    // GET: api/job/search?keyword=...&location=...&page=1&pageSize=10
-    [HttpGet("search")]
-    public async Task<IActionResult> Search(
-        [FromQuery] string? keyword,
-        [FromQuery] string? location,
-        [FromQuery] string? category,
-        [FromQuery] string? employmentType,
-        [FromQuery] string? experienceLevel,
-        [FromQuery] int? locationType,
-        [FromQuery] decimal? minSalary,
-        [FromQuery] decimal? maxSalary,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
-    {
-        if (page < 1) page = 1;
-        if (pageSize < 1) pageSize = 10;
-        if (pageSize > 100) pageSize = 100;
-
-        var (jobs, total) = await _jobService.SearchAsync(
-            keyword, location, category, employmentType, experienceLevel,
-            locationType, minSalary, maxSalary, page, pageSize);
-        return Ok(new { Jobs = jobs, Total = total, Page = page, PageSize = pageSize });
     }
 
     // POST: api/job/search
