@@ -1,0 +1,11 @@
+**/.git
+**/.vs
+**/.vscode
+**/.idea
+**/bin
+**/obj
+**/.env
+**/appsettings.Development.json
+Dockerfile
+.dockerignore
+backend.sln.DotSettings.user
