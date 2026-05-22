@@ -2,8 +2,8 @@ using System.Text;
 using System.Text.Json;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.BusinessLayer.Structure.DTOs.AI;
-using System.Net.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
@@ -13,35 +13,37 @@ namespace EasyApply.BusinessLayer.Core.AI;
 public class GeminiService : IGeminiService
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<GeminiService> _logger;
     private readonly string _apiKey;
     private const string Model = "google/gemini-2.0-flash-001";
 
-    public GeminiService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+    public GeminiService(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<GeminiService> logger)
     {
         _httpClientFactory = httpClientFactory;
-        _apiKey = configuration["OpenRouter:ApiKey"] 
-                  ?? Environment.GetEnvironmentVariable("OPENROUTER_API_KEY") 
+        _logger = logger;
+        _apiKey = configuration["OpenRouter:ApiKey"]
+                  ?? Environment.GetEnvironmentVariable("OPENROUTER_API_KEY")
                   ?? string.Empty;
     }
 
     public async Task<CompatibilityResultDto> GetCompatibilityResultAsync(Stream cvStream, string jobTitle, string jobDescription, string jobSkills)
     {
-        Console.WriteLine($"[AI-DEBUG] Starting analysis for CV Stream");
-        Console.WriteLine($"[AI-DEBUG] API Key status: {(string.IsNullOrEmpty(_apiKey) ? "MISSING" : "PRESENT (Length: " + _apiKey.Length + ")")}");
-        
+        _logger.LogDebug("Starting CV compatibility analysis for job: {JobTitle}", jobTitle);
+
         if (string.IsNullOrEmpty(_apiKey))
         {
-            Console.WriteLine("[AI-DEBUG] API Key is missing! Cannot proceed with OpenRouter call.");
+            _logger.LogWarning("OpenRouter API key is missing. Cannot perform CV compatibility analysis.");
             return new CompatibilityResultDto();
         }
 
         string cvText = ExtractText(cvStream);
         if (string.IsNullOrWhiteSpace(cvText))
         {
-            Console.WriteLine("[AI-DEBUG] Extraction failed or returned empty text.");
+            _logger.LogWarning("CV text extraction returned empty content.");
             return new CompatibilityResultDto();
         }
-        Console.WriteLine($"[AI-DEBUG] Extracted CV Text length: {cvText.Length} chars");
+
+        _logger.LogDebug("Extracted {CharCount} characters from CV.", cvText.Length);
 
         string prompt = $@"
                 You are an experienced HR specialist with 20+ years of recruitment experience across multiple industries.
@@ -119,20 +121,15 @@ public class GeminiService : IGeminiService
                 - AVANTAJE: minimum 1, maximum 3 bullet points
                 - DEZAVANTAJE: minimum 0, maximum 3 bullet points (omit section entirely if none)
                 ";
-            
-        // Show a bit of the prompt for verification
-        var logPrompt = prompt.Length > 500 ? prompt.Substring(0, 500) + "..." : prompt;
-        Console.WriteLine($"[AI-DEBUG] Sending Prompt to AI (truncated): \n{logPrompt}");
 
-        try 
+        try
         {
             string resultText = await SendToOpenRouter(prompt);
-            Console.WriteLine($"[AI-DEBUG] Raw AI Response: {resultText}");
             return ParseResponse(resultText);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[AI-DEBUG] Critical error during analysis: {ex.Message}");
+            _logger.LogError(ex, "Critical error during CV compatibility analysis for job: {JobTitle}", jobTitle);
             return new CompatibilityResultDto();
         }
     }
@@ -176,14 +173,13 @@ public class GeminiService : IGeminiService
 
         return result;
     }
-    
+
     private string ExtractText(Stream pdfStream)
     {
-        try 
+        try
         {
-            Console.WriteLine("[AI-DEBUG] Starting iText7 text extraction...");
             pdfStream.Position = 0;
-            
+
             var text = new StringBuilder();
             using (var reader = new PdfReader(pdfStream))
             using (var pdfDoc = new PdfDocument(reader))
@@ -196,13 +192,14 @@ public class GeminiService : IGeminiService
                     text.AppendLine(pageText);
                 }
             }
+
             var result = text.ToString().Trim();
-            Console.WriteLine($"[AI-DEBUG] iText7 extracted {result.Length} characters.");
+            _logger.LogDebug("Extracted {CharCount} characters from PDF.", result.Length);
             return result;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[AI-DEBUG] iText7 extraction failed: {ex.Message}");
+            _logger.LogError(ex, "Failed to extract text from PDF stream.");
             return string.Empty;
         }
     }
@@ -236,11 +233,11 @@ public class GeminiService : IGeminiService
 
         if (!response.IsSuccessStatusCode)
         {
-            Console.WriteLine($"[AI-DEBUG] OpenRouter API error: {response.StatusCode} - {responseJson}");
+            _logger.LogError("OpenRouter API returned {StatusCode}. Response: {Response}", response.StatusCode, responseJson);
             return "0";
         }
 
-        try 
+        try
         {
             using var doc = JsonDocument.Parse(responseJson);
             var text = doc.RootElement
@@ -253,7 +250,7 @@ public class GeminiService : IGeminiService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[AI-DEBUG] JSON parsing error from OpenRouter: {ex.Message}");
+            _logger.LogError(ex, "Failed to parse OpenRouter API response.");
             return "0";
         }
     }
