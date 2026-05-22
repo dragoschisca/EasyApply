@@ -1,4 +1,5 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Job;
+using EasyApply.Domain.Models.Job;
 
 namespace EasyApply.BusinessLayer.Interfaces.Services;
 
@@ -6,9 +7,6 @@ public interface IJobService
 {
     Task<JobDto> GetByIdAsync(Guid id);
     Task<IEnumerable<JobDto>> GetByCompanyIdAsync(Guid companyId, bool activeOnly = true);
-    Task<(IEnumerable<JobDto> Jobs, int Total)> SearchAsync(
-        string? keyword, string? location, string? category, string? employmentType,
-        string? experienceLevel, int? locationType, decimal? minSalary, decimal? maxSalary, int page, int pageSize);
     Task<SearchJobResultDto> SearchAsync(SearchJobDto searchDto);
     Task<IEnumerable<JobDto>> GetNearbyAsync(double latitude, double longitude, double radiusKm);
     Task<JobDto> CreateAsync(CreateJobDto dto);
