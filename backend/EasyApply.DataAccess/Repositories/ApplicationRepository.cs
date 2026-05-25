@@ -38,13 +38,13 @@ public class ApplicationRepository : IApplicationRepository
 
     public async Task<IEnumerable<Application>> GetAllAsync()
     {
-        return await _context.Applications.ToListAsync();
+        return await _context.Applications.AsNoTracking().ToListAsync();
     }
 
     public async Task<(IEnumerable<Application> Items, int TotalCount)> GetPagedAsync(int skip, int take)
     {
         var total = await _context.Applications.CountAsync();
-        var items = await _context.Applications.Skip(skip).Take(take).ToListAsync();
+        var items = await _context.Applications.AsNoTracking().Skip(skip).Take(take).ToListAsync();
         return (items, total);
     }
 
@@ -59,6 +59,7 @@ public class ApplicationRepository : IApplicationRepository
             .Include(a => a.Job).ThenInclude(j => j.Company)
             .Include(a => a.Candidate).ThenInclude(c => c.User)
             .Include(a => a.CV)
+            .AsNoTracking()
             .Where(a => a.CandidateId == candidateId)
             .ToListAsync();
     }
@@ -69,6 +70,7 @@ public class ApplicationRepository : IApplicationRepository
             .Include(a => a.Job).ThenInclude(j => j.Company)
             .Include(a => a.Candidate).ThenInclude(c => c.User)
             .Include(a => a.CV)
+            .AsNoTracking()
             .Where(a => a.JobId == jobId)
             .ToListAsync();
     }
@@ -97,6 +99,7 @@ public class ApplicationRepository : IApplicationRepository
     public async Task<IEnumerable<ApplicationStatusHistory>> GetStatusTimelineAsync(Guid applicationId)
     {
         return await _context.ApplicationStatusHistories
+            .AsNoTracking()
             .Where(h => h.ApplicationId == applicationId)
             .OrderByDescending(h => h.ChangedAt)
             .ToListAsync();
