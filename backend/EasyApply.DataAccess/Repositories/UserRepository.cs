@@ -38,13 +38,13 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> GetAllAsync()
     {
-        return await _context.Users.ToListAsync();
+        return await _context.Users.AsNoTracking().ToListAsync();
     }
 
     public async Task<(IEnumerable<User> Items, int TotalCount)> GetPagedAsync(int skip, int take)
     {
         var total = await _context.Users.CountAsync();
-        var items = await _context.Users.Skip(skip).Take(take).ToListAsync();
+        var items = await _context.Users.AsNoTracking().Skip(skip).Take(take).ToListAsync();
         return (items, total);
     }
 
@@ -56,6 +56,7 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _context.Users
+            .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Email == email);
     }
 }
