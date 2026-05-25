@@ -1,6 +1,5 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Application;
 using EasyApply.BusinessLayer.Structure.DTOs.AI;
-using EasyApply.BusinessLayer.Structure.Validation;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Enums;
 using EasyApply.Domain.Exceptions;
@@ -65,7 +64,7 @@ public class ApplicationService : IApplicationService
 
     public async Task<ApplicationDto> CreateAsync(Guid candidateId, CreateApplicationDto dto)
     {
-        ValidationHelper.ValidateCreateApplication(dto);
+
 
         var job = await _jobRepository.GetByIdAsync(dto.JobId);
         if (job == null) throw new NotFoundException($"Job with ID {dto.JobId} not found.");
@@ -103,12 +102,13 @@ public class ApplicationService : IApplicationService
             job.Title);
         }
 
-        return MapToDto(application);
+        var savedApplication = await _applicationRepository.GetWithDetailsAsync(application.Id);
+        return MapToDto(savedApplication ?? application);
     }
 
     public async Task<ApplicationDto> UpdateStatusAsync(Guid id, UpdateApplicationStatusDto dto)
     {
-        ValidationHelper.ValidateUpdateApplicationStatus(dto);
+
 
         var application = await _applicationRepository.GetWithDetailsAsync(id);
         if (application == null) throw new NotFoundException($"Application with ID {id} not found.");
