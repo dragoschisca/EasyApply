@@ -38,13 +38,13 @@ public class CandidateRepository : ICandidateRepository
 
     public async Task<IEnumerable<Candidate>> GetAllAsync()
     {
-        return await _context.Candidates.ToListAsync();
+        return await _context.Candidates.AsNoTracking().ToListAsync();
     }
 
     public async Task<(IEnumerable<Candidate> Items, int TotalCount)> GetPagedAsync(int skip, int take)
     {
         var total = await _context.Candidates.CountAsync();
-        var items = await _context.Candidates.Skip(skip).Take(take).ToListAsync();
+        var items = await _context.Candidates.AsNoTracking().Skip(skip).Take(take).ToListAsync();
         return (items, total);
     }
 
@@ -57,6 +57,7 @@ public class CandidateRepository : ICandidateRepository
     {
         return await _context.Candidates
             .Include(c => c.User)
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.UserId == userId);
     }
 
@@ -64,6 +65,7 @@ public class CandidateRepository : ICandidateRepository
     {
         return await _context.Candidates
             .Include(c => c.User)
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
@@ -71,6 +73,7 @@ public class CandidateRepository : ICandidateRepository
     {
         var pattern = $"%{term}%";
         return await _context.Candidates
+            .AsNoTracking()
             .Where(c => EF.Functions.ILike(c.FirstName, pattern) || EF.Functions.ILike(c.LastName, pattern))
             .ToListAsync();
     }
