@@ -74,7 +74,5 @@ public class CVRepository : ICVRepository
 
         foreach (var cv in cvs)
             cv.IsPrimary = cv.Id == cvId;
-
-        await _context.SaveChangesAsync();
     }
 }
