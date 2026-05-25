@@ -1,5 +1,4 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Job;
-using EasyApply.BusinessLayer.Structure.Validation;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
@@ -78,7 +77,7 @@ public class JobService : IJobService
 
     public async Task<JobDto> CreateAsync(CreateJobDto dto)
     {
-        ValidationHelper.ValidateCreateJob(dto);
+
         var company = await _companyRepository.GetByIdAsync(dto.CompanyId);
         if (company == null) throw new NotFoundException($"Company with ID {dto.CompanyId} not found.");
 
@@ -126,7 +125,7 @@ public class JobService : IJobService
 
     public async Task<JobDto> UpdateAsync(Guid id, UpdateJobDto dto)
     {
-        ValidationHelper.ValidateUpdateJob(dto);
+
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) throw new NotFoundException($"Job with ID {id} not found.");
 
