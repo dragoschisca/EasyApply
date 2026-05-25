@@ -1,5 +1,4 @@
 using EasyApply.BusinessLayer.Structure.DTOs.Company;
-using EasyApply.BusinessLayer.Structure.Validation;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Exceptions;
 using EasyApply.Domain.Interfaces.Repositories;
@@ -47,7 +46,7 @@ public class CompanyService : ICompanyService
     public async Task<CompanyDto> CreateAsync(Guid userId, CreateCompanyDto dto)
     {
         dto.UserId = userId;
-        ValidationHelper.ValidateCreateCompany(dto);
+
 
         var existing = await _companyRepository.GetByUserIdAsync(userId);
         if (existing != null) throw new ConflictException("Company profile already exists for this user.");
@@ -75,7 +74,7 @@ public class CompanyService : ICompanyService
 
     public async Task<CompanyDto> UpdateAsync(Guid userId, UpdateCompanyDto dto)
     {
-        ValidationHelper.ValidateUpdateCompany(dto);
+
 
         var company = await _companyRepository.GetByUserIdAsync(userId);
         if (company == null) throw new NotFoundException("Company profile not found.");
@@ -105,18 +104,14 @@ public class CompanyService : ICompanyService
         var totalApplicants = await _applicationRepository.GetCountByCompanyIdAsync(companyId);
 
         // 2. Weekly Profile Views
-        var profileViewsRaw = await _companyRepository.GetProfileViewsAsync(companyId, last7Days);
-        var viewsByDate = profileViewsRaw
-            .GroupBy(v => v.ViewedAt.Date)
-            .Select(g => new { Date = g.Key, Count = g.Count() })
-            .ToList();
+        var viewsByDate = await _companyRepository.GetProfileViewsCountByDateAsync(companyId, last7Days);
 
         var weeklyProfileViews = Enumerable.Range(0, 7)
             .Select(offset => last7Days.AddDays(offset))
             .Select(date => new DailyViewDto
             {
                 Date = date,
-                Views = viewsByDate.FirstOrDefault(p => p.Date == date)?.Count ?? 0
+                Views = viewsByDate.ContainsKey(date) ? viewsByDate[date] : 0
             })
             .ToList();
 
