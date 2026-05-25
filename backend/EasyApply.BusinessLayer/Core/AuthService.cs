@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using EasyApply.BusinessLayer.Structure.DTOs.Auth;
-using EasyApply.BusinessLayer.Structure.Validation;
 using EasyApply.BusinessLayer.Interfaces.Services;
 using EasyApply.Domain.Entities;
 using EasyApply.Domain.Enums;
@@ -37,7 +36,7 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
     {
-        ValidationHelper.ValidateRegister(request);
+
 
         var existingUser = await _userRepository.GetByEmailAsync(request.Email);
         if (existingUser != null)
@@ -109,7 +108,7 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
     {
-        ValidationHelper.ValidateLogin(request);
+
         var user = await _userRepository.GetByEmailAsync(request.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
