@@ -38,13 +38,13 @@ public class SavedJobRepository : ISavedJobRepository
 
     public async Task<IEnumerable<SavedJob>> GetAllAsync()
     {
-        return await _context.SavedJobs.ToListAsync();
+        return await _context.SavedJobs.AsNoTracking().ToListAsync();
     }
 
     public async Task<(IEnumerable<SavedJob> Items, int TotalCount)> GetPagedAsync(int skip, int take)
     {
         var total = await _context.SavedJobs.CountAsync();
-        var items = await _context.SavedJobs.Skip(skip).Take(take).ToListAsync();
+        var items = await _context.SavedJobs.AsNoTracking().Skip(skip).Take(take).ToListAsync();
         return (items, total);
     }
 
@@ -56,6 +56,7 @@ public class SavedJobRepository : ISavedJobRepository
     public async Task<IEnumerable<SavedJob>> GetByCandidateIdAsync(Guid candidateId)
     {
         return await _context.SavedJobs
+            .AsNoTracking()
             .Include(s => s.Job).ThenInclude(j => j.Company)
             .Where(s => s.CandidateId == candidateId)
             .ToListAsync();
