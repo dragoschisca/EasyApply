@@ -38,13 +38,13 @@ public class NotificationRepository : INotificationRepository
 
     public async Task<IEnumerable<Notification>> GetAllAsync()
     {
-        return await _context.Notifications.ToListAsync();
+        return await _context.Notifications.AsNoTracking().ToListAsync();
     }
 
     public async Task<(IEnumerable<Notification> Items, int TotalCount)> GetPagedAsync(int skip, int take)
     {
         var total = await _context.Notifications.CountAsync();
-        var items = await _context.Notifications.OrderByDescending(n => n.CreatedAt).Skip(skip).Take(take).ToListAsync();
+        var items = await _context.Notifications.AsNoTracking().OrderByDescending(n => n.CreatedAt).Skip(skip).Take(take).ToListAsync();
         return (items, total);
     }
 
@@ -56,6 +56,7 @@ public class NotificationRepository : INotificationRepository
     public async Task<IEnumerable<Notification>> GetByUserIdAsync(Guid userId)
     {
         return await _context.Notifications
+            .AsNoTracking()
             .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();
