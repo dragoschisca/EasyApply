@@ -38,13 +38,13 @@ public class CompanyRepository : ICompanyRepository
 
     public async Task<IEnumerable<Company>> GetAllAsync()
     {
-        return await _context.Companies.ToListAsync();
+        return await _context.Companies.AsNoTracking().ToListAsync();
     }
 
     public async Task<(IEnumerable<Company> Items, int TotalCount)> GetPagedAsync(int skip, int take)
     {
         var total = await _context.Companies.CountAsync();
-        var items = await _context.Companies.Skip(skip).Take(take).ToListAsync();
+        var items = await _context.Companies.AsNoTracking().Skip(skip).Take(take).ToListAsync();
         return (items, total);
     }
 
@@ -56,6 +56,7 @@ public class CompanyRepository : ICompanyRepository
     public async Task<Company?> GetByUserIdAsync(Guid userId)
     {
         return await _context.Companies
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.UserId == userId);
     }
 
@@ -63,6 +64,7 @@ public class CompanyRepository : ICompanyRepository
     {
         return await _context.Companies
             .Include(c => c.Jobs)
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
@@ -74,7 +76,20 @@ public class CompanyRepository : ICompanyRepository
     public async Task<IEnumerable<CompanyProfileView>> GetProfileViewsAsync(Guid companyId, DateTime since)
     {
         return await _context.CompanyProfileViews
+            .AsNoTracking()
             .Where(v => v.CompanyId == companyId && v.ViewedAt >= since)
             .ToListAsync();
+    }
+
+    public async Task<IDictionary<DateTime, int>> GetProfileViewsCountByDateAsync(Guid companyId, DateTime since)
+    {
+        var data = await _context.CompanyProfileViews
+            .AsNoTracking()
+            .Where(v => v.CompanyId == companyId && v.ViewedAt >= since)
+            .GroupBy(v => v.ViewedAt.Date)
+            .Select(g => new { Date = g.Key, Count = g.Count() })
+            .ToListAsync();
+
+        return data.ToDictionary(x => x.Date, x => x.Count);
     }
 }
