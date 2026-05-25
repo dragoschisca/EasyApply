@@ -40,13 +40,13 @@ public class JobRepository : IJobRepository
 
     public async Task<IEnumerable<Job>> GetAllAsync()
     {
-        return await _context.Jobs.Include(j => j.Company).ToListAsync();
+        return await _context.Jobs.Include(j => j.Company).AsNoTracking().ToListAsync();
     }
 
     public async Task<(IEnumerable<Job> Items, int TotalCount)> GetPagedAsync(int skip, int take)
     {
         var total = await _context.Jobs.CountAsync();
-        var items = await _context.Jobs.Include(j => j.Company).Skip(skip).Take(take).ToListAsync();
+        var items = await _context.Jobs.Include(j => j.Company).AsNoTracking().Skip(skip).Take(take).ToListAsync();
         return (items, total);
     }
 
@@ -57,7 +57,7 @@ public class JobRepository : IJobRepository
 
     public async Task<IEnumerable<Job>> GetByCompanyIdAsync(Guid companyId, bool activeOnly = true)
     {
-        var query = _context.Jobs.Include(j => j.Company).Where(j => j.CompanyId == companyId);
+        var query = _context.Jobs.Include(j => j.Company).AsNoTracking().Where(j => j.CompanyId == companyId);
         if (activeOnly)
             query = query.Where(j => j.IsActive);
         return await query.ToListAsync();
@@ -67,6 +67,7 @@ public class JobRepository : IJobRepository
     {
         var query = _context.Jobs
             .Include(j => j.Company)
+            .AsNoTracking()
             .Where(j => j.IsActive)
             .AsQueryable();
 
@@ -113,7 +114,7 @@ public class JobRepository : IJobRepository
         {
             foreach (var skill in searchDto.Skills)
             {
-                query = query.Where(j => j.RequiredSkills != null && j.RequiredSkills.Contains(skill));
+                query = query.Where(j => j.RequiredSkills != null && EF.Functions.ILike(j.RequiredSkills, $"%\"{skill}\"%"));
             }
         }
 
@@ -161,6 +162,7 @@ public class JobRepository : IJobRepository
 
         return await _context.Jobs
             .Include(j => j.Company)
+            .AsNoTracking()
             .Where(j => j.Id != jobId && j.IsActive && 
                        (j.CompanyId == sourceJob.CompanyId || j.Category == sourceJob.Category))
             .OrderByDescending(j => j.CreatedAt)
@@ -225,7 +227,7 @@ public class JobRepository : IJobRepository
 
     public async Task<IEnumerable<(decimal? Min, decimal? Max)>> GetSalaryBenchmarkDataAsync(string category, string experienceLevel)
     {
-        var query = _context.Jobs.AsQueryable();
+        var query = _context.Jobs.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(category))
             query = query.Where(j => j.Category == category);
