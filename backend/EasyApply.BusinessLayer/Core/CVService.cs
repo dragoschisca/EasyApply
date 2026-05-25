@@ -64,13 +64,13 @@ public class CVService : ICVService
         };
 
         await _cvRepository.AddAsync(cv);
-        await _cvRepository.SaveChangesAsync();
 
         if (isPrimary)
         {
             await _cvRepository.SetPrimaryAsync(cv.Id, candidateId);
-            await _cvRepository.SaveChangesAsync();
         }
+
+        await _cvRepository.SaveChangesAsync();
 
         return MapToDto(cv);
     }
