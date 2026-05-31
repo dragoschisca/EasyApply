@@ -8,4 +8,5 @@ public interface ICompanyRepository : IBaseRepository<Company>
     Task<Company?> GetWithDetailsAsync(Guid id);
     Task AddProfileViewAsync(CompanyProfileView view);
     Task<IEnumerable<CompanyProfileView>> GetProfileViewsAsync(Guid companyId, DateTime since);
+    Task<IDictionary<DateTime, int>> GetProfileViewsCountByDateAsync(Guid companyId, DateTime since);
 }
