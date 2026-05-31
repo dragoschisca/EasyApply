@@ -10,6 +10,11 @@ using System.Text.Json.Serialization;
 using EasyApply.BusinessLayer.Core.AI;
 using EasyApply.Api.Middleware;
 using FluentEmail.MailKitSmtp;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using EasyApply.BusinessLayer.Structure.Validators;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +84,10 @@ builder.Services.AddScoped<ISupabaseStorageService, SupabaseStorageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
+builder.Services.AddScoped<ICompanyReviewRepository, CompanyReviewRepository>();
+builder.Services.AddScoped<ICompanyRatingRepository, CompanyRatingRepository>();
+builder.Services.AddScoped<ICompanyReviewService, CompanyReviewService>();
+
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 #region EMAIL_SETUP
@@ -110,6 +119,28 @@ builder.Services.AddHttpClient("Nominatim", client =>
 builder.Services.AddScoped<IGeocodingService, GeocodingService>();
 builder.Services.AddScoped<GlobalExceptionHandlerMiddleware>();
 builder.Services.AddHttpClient();
+
+#endregion
+
+#region FLUENT_VALIDATION
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateJobDtoValidator>();
+
+#endregion
+
+#region HEALTH_CHECKS
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(connectionString, name: "Database");
+
+builder.Services.AddHealthChecksUI(options =>
+{
+    options.SetEvaluationTimeInSeconds(15);
+    options.MaximumHistoryEntriesPerEndpoint(60);
+    options.SetApiMaxActiveRequests(1);
+    options.AddHealthCheckEndpoint("EasyApply API", "/health");
+}).AddInMemoryStorage();
 
 #endregion
 
@@ -171,5 +202,17 @@ app.UseSwaggerUI(options =>
 app.UseHttpsRedirection();
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.UseCors("AllowFrontend");
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapHealthChecksUI(options =>
+{
+    options.UIPath = "/health-ui";
+});
+
 app.MapControllers();
 app.Run();
