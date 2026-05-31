@@ -12,10 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="supabase\migrations\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\EasyApply.Domain\EasyApply.Domain.csproj" />
     </ItemGroup>
 
