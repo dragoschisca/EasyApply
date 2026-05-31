@@ -277,6 +277,113 @@ namespace EasyApply.DataAccess.Migrations
                     b.ToTable("CompanyProfileViews");
                 });
 
+            modelBuilder.Entity("EasyApply.Domain.Entities.CompanyRating", b =>
+                {
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("AverageRating")
+                        .HasPrecision(3, 2)
+                        .HasColumnType("numeric(3,2)");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RatingDistribution")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TotalReviews")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CompanyId");
+
+                    b.ToTable("CompanyRatings");
+                });
+
+            modelBuilder.Entity("EasyApply.Domain.Entities.CompanyReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CompanyResponse")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("HelpfulCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("HiringProcessDuration")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("InterviewExperience")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("JobTitle")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ReviewText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("SalaryOffered")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId", "CreatedAt");
+
+                    b.HasIndex("UserId", "CompanyId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "CreatedAt");
+
+                    b.ToTable("CompanyReviews");
+                });
+
+            modelBuilder.Entity("EasyApply.Domain.Entities.CompanyReviewHelpful", b =>
+                {
+                    b.Property<Guid>("ReviewId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("ReviewId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CompanyReviewHelpfuls");
+                });
+
             modelBuilder.Entity("EasyApply.Domain.Entities.Job", b =>
                 {
                     b.Property<Guid>("Id")
@@ -563,6 +670,55 @@ namespace EasyApply.DataAccess.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("Viewer");
+                });
+
+            modelBuilder.Entity("EasyApply.Domain.Entities.CompanyRating", b =>
+                {
+                    b.HasOne("EasyApply.Domain.Entities.Company", "Company")
+                        .WithOne()
+                        .HasForeignKey("EasyApply.Domain.Entities.CompanyRating", "CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("EasyApply.Domain.Entities.CompanyReview", b =>
+                {
+                    b.HasOne("EasyApply.Domain.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EasyApply.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EasyApply.Domain.Entities.CompanyReviewHelpful", b =>
+                {
+                    b.HasOne("EasyApply.Domain.Entities.CompanyReview", "Review")
+                        .WithMany()
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EasyApply.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Review");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EasyApply.Domain.Entities.Job", b =>
