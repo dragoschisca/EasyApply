@@ -37,4 +37,9 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Structure\Validators\CandidateValidators.cs" />
+      <Compile Remove="Structure\Validators\AuthValidators.cs" />
+    </ItemGroup>
+
 </Project>

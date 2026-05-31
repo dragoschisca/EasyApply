@@ -33,10 +33,17 @@
     <ItemGroup>
       <Content Remove="wwwroot\Uploads\CVs\b8d79b20-2443-4567-b1f2-9cffc4c643fb.pdf" />
       <Content Remove="wwwroot\Uploads\CVs\7faa6e0f-6ee4-4e70-bc0a-5c96fbc6f131.pdf" />
+      <Content Remove="wwwroot\Uploads\CVs\ab90032e-17e8-43e6-8c79-f948bc0213b3_TestCV" />
+      <Content Remove="wwwroot\Uploads\CVs\8b35d586-cfcf-4518-ac66-9c32f37e9cc9_BorodaciovGhenadiiCVg" />
+      <Content Remove="wwwroot\Uploads\CVs\1a8a3344-f94f-4869-ad87-d913e1965c1a_CV Iacovlev Alexandr #1" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="wwwroot\Uploads\CVs\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Controller\CompanyReviewController.cs" />
     </ItemGroup>
 
 </Project>

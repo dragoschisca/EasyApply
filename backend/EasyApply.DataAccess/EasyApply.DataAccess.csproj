@@ -15,4 +15,10 @@
       <ProjectReference Include="..\EasyApply.Domain\EasyApply.Domain.csproj" />
     </ItemGroup>
 
+
+
+    <ItemGroup>
+      <None Remove="supabase\migrations\20260522193207_AddCompanyReviews.sql" />
+    </ItemGroup>
+
 </Project>
